@@ -11,7 +11,9 @@ class Game {
 		void check_events();
 
 		// == Vars ==
-		uint status;
+		uint state;
+		Player me;
+		Player otherplayer;
 
 	private:
 		Game(const Game &game);

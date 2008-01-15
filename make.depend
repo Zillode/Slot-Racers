@@ -87,7 +87,7 @@ main.o: main.C main.h /usr/include/c++/4.1.3/vector \
   /usr/include/SDL/SDL_video.h /usr/include/SDL/SDL_joystick.h \
   /usr/include/SDL/SDL_quit.h /usr/include/SDL/SDL_loadso.h \
   /usr/include/SDL/SDL_timer.h /usr/include/SDL/SDL_version.h game.h \
-  graphics.h map.h
+  graphics.h CSprite.h /usr/include/SDL/SDL.h CSpriteBase.h font.h map.h
 map.o: map.C map.h main.h /usr/include/c++/4.1.3/vector \
   /usr/include/c++/4.1.3/bits/functexcept.h \
   /usr/include/c++/4.1.3/exception_defines.h \
@@ -177,7 +177,7 @@ map.o: map.C map.h main.h /usr/include/c++/4.1.3/vector \
   /usr/include/SDL/SDL_video.h /usr/include/SDL/SDL_joystick.h \
   /usr/include/SDL/SDL_quit.h /usr/include/SDL/SDL_loadso.h \
   /usr/include/SDL/SDL_timer.h /usr/include/SDL/SDL_version.h game.h \
-  graphics.h
+  graphics.h CSprite.h /usr/include/SDL/SDL.h CSpriteBase.h font.h
 graphics.o: graphics.C graphics.h main.h /usr/include/c++/4.1.3/vector \
   /usr/include/c++/4.1.3/bits/functexcept.h \
   /usr/include/c++/4.1.3/exception_defines.h \
@@ -267,5 +267,101 @@ graphics.o: graphics.C graphics.h main.h /usr/include/c++/4.1.3/vector \
   /usr/include/SDL/SDL_video.h /usr/include/SDL/SDL_joystick.h \
   /usr/include/SDL/SDL_quit.h /usr/include/SDL/SDL_loadso.h \
   /usr/include/SDL/SDL_timer.h /usr/include/SDL/SDL_version.h game.h \
-  map.h
+  map.h CSprite.h /usr/include/SDL/SDL.h CSpriteBase.h font.h
 game.o: game.C game.h
+CSpriteBase.o: CSpriteBase.C CSpriteBase.h /usr/include/SDL/SDL.h \
+  /usr/include/SDL/SDL_main.h /usr/include/SDL/SDL_stdinc.h \
+  /usr/include/SDL/SDL_config.h /usr/include/SDL/SDL_platform.h \
+  /usr/include/sys/types.h /usr/include/features.h \
+  /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h \
+  /usr/include/gnu/stubs.h /usr/include/gnu/stubs-32.h \
+  /usr/include/bits/types.h \
+  /usr/lib/gcc/i486-linux-gnu/4.1.3/include/stddef.h \
+  /usr/include/bits/typesizes.h /usr/include/time.h /usr/include/endian.h \
+  /usr/include/bits/endian.h /usr/include/sys/select.h \
+  /usr/include/bits/select.h /usr/include/bits/sigset.h \
+  /usr/include/bits/time.h /usr/include/sys/sysmacros.h \
+  /usr/include/bits/pthreadtypes.h /usr/include/stdio.h \
+  /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
+  /usr/include/bits/wchar.h /usr/include/gconv.h \
+  /usr/lib/gcc/i486-linux-gnu/4.1.3/include/stdarg.h \
+  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
+  /usr/include/stdlib.h /usr/include/bits/waitflags.h \
+  /usr/include/bits/waitstatus.h /usr/include/xlocale.h \
+  /usr/include/alloca.h /usr/include/string.h /usr/include/strings.h \
+  /usr/include/inttypes.h /usr/include/stdint.h /usr/include/ctype.h \
+  /usr/include/iconv.h /usr/include/SDL/begin_code.h \
+  /usr/include/SDL/close_code.h /usr/include/SDL/SDL_audio.h \
+  /usr/include/SDL/SDL_error.h /usr/include/SDL/SDL_endian.h \
+  /usr/include/SDL/SDL_mutex.h /usr/include/SDL/SDL_thread.h \
+  /usr/include/SDL/SDL_rwops.h /usr/include/SDL/SDL_cdrom.h \
+  /usr/include/SDL/SDL_cpuinfo.h /usr/include/SDL/SDL_events.h \
+  /usr/include/SDL/SDL_active.h /usr/include/SDL/SDL_keyboard.h \
+  /usr/include/SDL/SDL_keysym.h /usr/include/SDL/SDL_mouse.h \
+  /usr/include/SDL/SDL_video.h /usr/include/SDL/SDL_joystick.h \
+  /usr/include/SDL/SDL_quit.h /usr/include/SDL/SDL_loadso.h \
+  /usr/include/SDL/SDL_timer.h /usr/include/SDL/SDL_version.h
+CSprite.o: CSprite.C CSprite.h /usr/include/SDL/SDL.h \
+  /usr/include/SDL/SDL_main.h /usr/include/SDL/SDL_stdinc.h \
+  /usr/include/SDL/SDL_config.h /usr/include/SDL/SDL_platform.h \
+  /usr/include/sys/types.h /usr/include/features.h \
+  /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h \
+  /usr/include/gnu/stubs.h /usr/include/gnu/stubs-32.h \
+  /usr/include/bits/types.h \
+  /usr/lib/gcc/i486-linux-gnu/4.1.3/include/stddef.h \
+  /usr/include/bits/typesizes.h /usr/include/time.h /usr/include/endian.h \
+  /usr/include/bits/endian.h /usr/include/sys/select.h \
+  /usr/include/bits/select.h /usr/include/bits/sigset.h \
+  /usr/include/bits/time.h /usr/include/sys/sysmacros.h \
+  /usr/include/bits/pthreadtypes.h /usr/include/stdio.h \
+  /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
+  /usr/include/bits/wchar.h /usr/include/gconv.h \
+  /usr/lib/gcc/i486-linux-gnu/4.1.3/include/stdarg.h \
+  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
+  /usr/include/stdlib.h /usr/include/bits/waitflags.h \
+  /usr/include/bits/waitstatus.h /usr/include/xlocale.h \
+  /usr/include/alloca.h /usr/include/string.h /usr/include/strings.h \
+  /usr/include/inttypes.h /usr/include/stdint.h /usr/include/ctype.h \
+  /usr/include/iconv.h /usr/include/SDL/begin_code.h \
+  /usr/include/SDL/close_code.h /usr/include/SDL/SDL_audio.h \
+  /usr/include/SDL/SDL_error.h /usr/include/SDL/SDL_endian.h \
+  /usr/include/SDL/SDL_mutex.h /usr/include/SDL/SDL_thread.h \
+  /usr/include/SDL/SDL_rwops.h /usr/include/SDL/SDL_cdrom.h \
+  /usr/include/SDL/SDL_cpuinfo.h /usr/include/SDL/SDL_events.h \
+  /usr/include/SDL/SDL_active.h /usr/include/SDL/SDL_keyboard.h \
+  /usr/include/SDL/SDL_keysym.h /usr/include/SDL/SDL_mouse.h \
+  /usr/include/SDL/SDL_video.h /usr/include/SDL/SDL_joystick.h \
+  /usr/include/SDL/SDL_quit.h /usr/include/SDL/SDL_loadso.h \
+  /usr/include/SDL/SDL_timer.h /usr/include/SDL/SDL_version.h \
+  CSpriteBase.h
+font.o: font.C /usr/include/stdio.h /usr/include/features.h \
+  /usr/include/sys/cdefs.h /usr/include/bits/wordsize.h \
+  /usr/include/gnu/stubs.h /usr/include/gnu/stubs-32.h \
+  /usr/lib/gcc/i486-linux-gnu/4.1.3/include/stddef.h \
+  /usr/include/bits/types.h /usr/include/bits/typesizes.h \
+  /usr/include/libio.h /usr/include/_G_config.h /usr/include/wchar.h \
+  /usr/include/bits/wchar.h /usr/include/gconv.h \
+  /usr/lib/gcc/i486-linux-gnu/4.1.3/include/stdarg.h \
+  /usr/include/bits/stdio_lim.h /usr/include/bits/sys_errlist.h \
+  /usr/include/stdlib.h /usr/include/bits/waitflags.h \
+  /usr/include/bits/waitstatus.h /usr/include/endian.h \
+  /usr/include/bits/endian.h /usr/include/xlocale.h \
+  /usr/include/sys/types.h /usr/include/time.h /usr/include/sys/select.h \
+  /usr/include/bits/select.h /usr/include/bits/sigset.h \
+  /usr/include/bits/time.h /usr/include/sys/sysmacros.h \
+  /usr/include/bits/pthreadtypes.h /usr/include/alloca.h \
+  /usr/include/string.h /usr/include/SDL/SDL.h \
+  /usr/include/SDL/SDL_main.h /usr/include/SDL/SDL_stdinc.h \
+  /usr/include/SDL/SDL_config.h /usr/include/SDL/SDL_platform.h \
+  /usr/include/strings.h /usr/include/inttypes.h /usr/include/stdint.h \
+  /usr/include/ctype.h /usr/include/iconv.h /usr/include/SDL/begin_code.h \
+  /usr/include/SDL/close_code.h /usr/include/SDL/SDL_audio.h \
+  /usr/include/SDL/SDL_error.h /usr/include/SDL/SDL_endian.h \
+  /usr/include/SDL/SDL_mutex.h /usr/include/SDL/SDL_thread.h \
+  /usr/include/SDL/SDL_rwops.h /usr/include/SDL/SDL_cdrom.h \
+  /usr/include/SDL/SDL_cpuinfo.h /usr/include/SDL/SDL_events.h \
+  /usr/include/SDL/SDL_active.h /usr/include/SDL/SDL_keyboard.h \
+  /usr/include/SDL/SDL_keysym.h /usr/include/SDL/SDL_mouse.h \
+  /usr/include/SDL/SDL_video.h /usr/include/SDL/SDL_joystick.h \
+  /usr/include/SDL/SDL_quit.h /usr/include/SDL/SDL_loadso.h \
+  /usr/include/SDL/SDL_timer.h /usr/include/SDL/SDL_version.h font.h

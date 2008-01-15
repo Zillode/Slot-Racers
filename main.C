@@ -11,10 +11,10 @@ int main(int argc, const char* argv[]) {
 	// Make sure SDL quits on exit
 	atexit(SDL_Quit);
 
-	// We need Graphics
-	Graphics graphics(800,640);
 	// We need the game controller
-	Game game();
+	Game game;
+	// We need Graphics
+	Graphics graphics(game);
 
 	while(!game.stop()) {
 		game.check_events();

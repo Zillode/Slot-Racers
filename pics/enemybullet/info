@@ -1,0 +1,5 @@
+FILES: 1
+# SYNTAX:
+# filename of the frame, milliseconds to pause afterwards,
+# the RGB of the transparent part.
+enemybullet.png       50    0 255 0

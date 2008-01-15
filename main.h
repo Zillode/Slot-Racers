@@ -28,6 +28,10 @@
 #define GAME_SETTINGS	3
 #define GAME_STOP		4
 
+// Video Resolution
+#define VID_RESOLUTION_X 320
+#define VID_RESOLUTION_Y 240
+
 #define uint unsigned int
 
 using std::vector;
