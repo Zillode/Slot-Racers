@@ -1,0 +1,6 @@
+FILES: 2
+# SYNTAX:
+# filename of the frame, milliseconds to pause afterwards,
+# the RGB of the transparent part.
+player-normal-0.png       50    0 255 0
+player-normal-1.png       0     0 255 0
