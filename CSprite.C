@@ -12,15 +12,17 @@
 
 #include "CSprite.h"
 
-int CSprite::init(CSpriteBase *base, SDL_Surface *screen)
+int CSprite::init(CSpriteBase *base, SDL_Surface *screen):
+	mSpriteBas(base),
+	mScreen(screen),
+	mAnimating(0),
+	mSpeed(1)
 {
-  mSpriteBase = base;
   if(mSpriteBase->mBuilt)
   {
     if(mSpriteBase->mNumframes>1) mAnimating=1;
     mBackreplacement = SDL_DisplayFormat(mSpriteBase->mAnim[0].image);
   }
-  mScreen = screen;
   return 0;
 }
 
@@ -52,12 +54,15 @@ void CSprite::draw()
 {
   if(mAnimating == 1)
   {
-    if(mLastupdate+mSpriteBase->mAnim[mFrame].pause*mSpeed<SDL_GetTicks())
-    {
-      mFrame++;
-      if(mFrame>mSpriteBase->mNumframes-1) mFrame=0;
-      mLastupdate = SDL_GetTicks();
-    }
+	if(mSpriteBase->mAnim[mFrame].pause != 0) {
+	    if(mLastupdate+mSpriteBase->mAnim[mFrame].pause*mSpeed<SDL_GetTicks())
+		{
+	      mFrame++;
+	      if(mFrame>mSpriteBase->mNumframes-1) mFrame=0;
+	      mLastupdate = SDL_GetTicks();
+	    }
+	} else {
+		mAnimating = 0;
   }
 
   if(mDrawn==0) mDrawn=1;

@@ -1,7 +1,7 @@
 
 #include "game.h"
 
-Game::Game(): status(GAME_PLAY), me(), otherplayer()
+Game::Game(): state(GAME_PLAY), me(), otherplayer()
 { }
 
 Game::~Game()
@@ -9,7 +9,7 @@ Game::~Game()
 
 bool Game::stop()
 {
-	return (status == GAME_STOP);
+	return (state == GAME_STOP);
 }
 
 void Game::check_events()
@@ -36,6 +36,4 @@ void Game::check_events()
     {
       sdlgt+=dt*10;
     }
-
-
 }

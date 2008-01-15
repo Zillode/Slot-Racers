@@ -16,24 +16,27 @@ Graphics::Graphics(Game &thegame):
 	font = initFont("data/font");
 	yellowfont = initFont("data/font",1,1,0);
 	// Load the images for me
-	playerSpriteBase.init("data/player");
+	playerNormalSpriteBase.init("data/playernormal");
 	playerLeftSpriteBase.init("data/playerleft");
 	playerRightSpriteBase.init("data/playerright");
 	// Load the images for my bullet
-	bulletSpriteBase.init("data/bullet");
+	playerBulletSpriteBase.init("data/playerbullet");
 	// Load the images for the other player
-	otherplayerSpriteBase.init("data/enemy");
-	otherplayerSpriteBase.init("data/enemyleft");
-	otherplayerSpriteBase.init("data/enemyright");
+	otherplayerNormalSpriteBase.init("data/enemynormal");
+	otherplayerLeftSpriteBase.init("data/enemyleft");
+	otherplayerRightSpriteBase.init("data/enemyright");
 	// Load the images for the other player's bullet
-	otherbulletSpriteBase.init("data/enemybullet");
-	SDL_SetColorKey(gameoverimg, SDL_SRCCOLORKEY, SDL_MapRGB(gameoverimg->format, 0, 255, 0));
-	me.init(&playerSpriteBase,screen);
-	bullet.init(&bulletSpriteBase,screen);
-	otherplayer.init(&otherplayerSpriteBase,screen);
-	otherbullet.init(&otherbulletSpriteBase,screen);
-	me.setSpeed(1);
-	otherplayer.setSpeed(1);
+	otherplayerBulletSpriteBase.init("data/enemybullet");
+	// My Sprites
+	meNormal.init(&playerNormalSpriteBase,screen);
+	meLeft.init(&playerLeftSpriteBase,screen);
+	meRight.init(&playerRightSpriteBase,screen);
+	myBullet.init(&playerBulletSpriteBase,screen);
+	// Other player's sprites
+	otherplayerNormal.init(&otherplayerNormalSpriteBase,screen);
+	otherplayerLeft.init(&otherplayerLeftSpriteBase,screen);
+	otherplayerRight.init(&otherplayerRightSpriteBase,screen);
+	otherplayerBullet.init(&otherplayerBulletSpriteBase,screen);
 }
 
 Graphics::~Graphics()
@@ -70,7 +73,7 @@ void Graphics::drawplay()
 	// We first fill the entire screen with black
 	SDL_FillRect(screen,0,0);
 	// Draw the background
-	drawimg(background,0,0,VID_RESOLUTION_X,VID_RESOLUTION_Y,0,0)
+	drawimg(background,0,0,VID_RESOLUTION_X,VID_RESOLUTION_Y,0,0);
 	// Draw the players
 	drawplayers();
 	// Draw the scores
@@ -81,8 +84,59 @@ void Graphics::drawplay()
 
 void Graphics::drawplayers()
 {
-	meSprite.draw();
-	otherplayerSprite.draw();
+	switch (game.me.direction)
+	{	case PLAYER_DIRECTION_NORMAL:
+			if (mePreviousDirection != PLAYER_DIRECTION_NORMAL)	{
+				meNormal.stopAnim();
+				meNormal.setFrame(0);
+			}
+			meNormal.draw();
+			break;
+		case PLAYER_DIRECTION_LEFT:
+			if (mePreviousDirection != PLAYER_DIRECTION_LEFT) {
+				meLeft.setFrame(0);
+				meLeft.startAnim();
+			}
+			meLeft.draw();
+			break;
+		case PLAYER_DIRECTION_RIGHT:
+			if(mePreviousDirection != PLAYER_DIRECTION_RIGHT) {
+				meRight.setFrame(0);
+				meRight.startAnim();
+			}
+			meRight.draw();
+			break;
+		default:
+			printf("Fatal Error: Drawplayers()");
+			exit(1);
+	}
+
+	switch (game.otherplayer.direction)
+	{	case PLAYER_DIRECTION_NORMAL:
+			if (otherplayerPreviousDirection != PLAYER_DIRECTION_NORMAL)	{
+				otherplayerNormal.stopAnim();
+				otherplayerNormal.setFrame(0);
+			}
+			otherplayerNormal.draw();
+			break;
+		case PLAYER_DIRECTION_LEFT:
+			if (otherplayerPreviousDirection != PLAYER_DIRECTION_LEFT) {
+				otherplayerLeft.setFrame(0);
+				otherplayerLeft.startAnim();
+			}
+			otherplayerLeft.draw();
+			break;
+		case PLAYER_DIRECTION_RIGHT:
+			if(otherplayerPreviousDirection != PLAYER_DIRECTION_RIGHT) {
+				otherplayerRight.setFrame(0);
+				otherplayerRight.startAnim();
+			}
+			otherplayerRight.draw();
+			break;
+		default:
+			printf("Fatal Error: Drawplayers()");
+			exit(1);
+	}
 }
 
 void Graphics::drawscores()
@@ -90,7 +144,7 @@ void Graphics::drawscores()
 	drawString(screen, font, 5,5,"Score Player1:");
 	drawString(screen, font, 80,5,"%u",game.me.score);
 	drawString(screen, font, 200,5,"Score Player2:");
-	drawString(screen, font, 280,5,"%u",otherplayer.score)
+	drawString(screen, font, 280,5,"%u",game.otherplayer.score);
 }
 
 void Graphics::drawimg(SDL_Surface *img, int x, int y, int w, int h, int x2, int y2)

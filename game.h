@@ -1,6 +1,8 @@
 #ifndef GAME_H
 #define GAME_H
 
+#include "player.h"
+
 class Game {
 	public:
 		Game();
@@ -17,6 +19,10 @@ class Game {
 
 	private:
 		Game(const Game &game);
+		int td,td2;  // Used when checking the time difference
+		float dt;    // The time that has elapsed since the previous frame
+		float sdlgt; // Stores the time that has passed
+		bool paused;
 };
 
 #endif

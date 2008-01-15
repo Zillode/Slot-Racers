@@ -1,5 +1,5 @@
-#ifndef "PLAYER_H"
-#define "PLAYER_H"
+#ifndef PLAYER_H
+#define PLAYER_H
 
 #include "main.h"
 
@@ -12,6 +12,7 @@ class Player {
 		uint score;
 		uint posx;
 		uint posy;
+		uint direction;
 	private:
 		Player(const Player &player);
 };

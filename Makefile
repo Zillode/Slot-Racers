@@ -1,6 +1,6 @@
 CXXFLAGS=-Wno-deprecated -g
 LDFLAGS=`sdl-config --cflags --libs`
-CCFILES=main.C map.C graphics.C game.C CSpriteBase.C CSprite.C font.C
+CCFILES=main.C map.C graphics.C game.C CSpriteBase.C CSprite.C font.C player.C
 HFILES=$(CCFILES:%.C=%.h)
 PICFILES=pics/*
 OFILES=$(CCFILES:%.C=%.o)
