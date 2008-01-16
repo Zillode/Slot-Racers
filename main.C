@@ -22,8 +22,5 @@ int main(int argc, const char* argv[]) {
 	    SDL_Delay(1);
 	}
 
-
-
-
 	return 0;
 }

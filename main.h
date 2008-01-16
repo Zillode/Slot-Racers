@@ -19,8 +19,6 @@
 // Game stuff
 #include "game.h"
 #include "graphics.h"
-#include "map.h"
-#include "player.h"
 
 // Game States
 #define GAME_MENU		1
@@ -36,6 +34,10 @@
 #define PLAYER_DIRECTION_NORMAL	0
 #define PLAYER_DIRECTION_LEFT	1
 #define PLAYER_DIRECTION_RIGHT	2
+
+// Map States
+#define MAP_ITEM_CLEAR	0
+#define MAP_ITEM_WALL	1
 
 #define uint unsigned int
 

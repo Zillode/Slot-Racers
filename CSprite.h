@@ -20,8 +20,8 @@
 class CSprite
 {
   public:
-  CSprite() {}
-  ~CSprite() {};
+  CSprite();
+  ~CSprite();
   int init(CSpriteBase *base, SDL_Surface *screen);
   void draw();
   void clearBG();

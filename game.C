@@ -1,8 +1,15 @@
-
+#include "main.h"
 #include "game.h"
 
-Game::Game(): state(GAME_PLAY), me(), otherplayer()
-{ }
+Game::Game(): state(GAME_PLAY),
+	me(),
+	otherplayer(),
+	map(NULL)
+{
+	map = new Map(50,50);
+	mapid = 0;
+	map->put(20,20,MAP_WALL); // TODO
+}
 
 Game::~Game()
 { }
@@ -10,6 +17,14 @@ Game::~Game()
 bool Game::stop()
 {
 	return (state == GAME_STOP);
+}
+
+void Game::setmap(string mapname)
+{
+	delete map;
+	mapid += 1;
+	printf("TODO");
+	exit(1);
 }
 
 void Game::check_events()

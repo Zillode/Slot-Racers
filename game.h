@@ -2,6 +2,7 @@
 #define GAME_H
 
 #include "player.h"
+#include "map.h"
 
 class Game {
 	public:
@@ -11,11 +12,14 @@ class Game {
 		// == Functions ==
 		bool stop();
 		void check_events();
+		void setmap(string mapname);
 
 		// == Vars ==
 		uint state;
 		Player me;
 		Player otherplayer;
+		uint mapid;
+		Map *map;
 
 	private:
 		Game(const Game &game);

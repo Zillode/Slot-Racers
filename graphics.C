@@ -1,7 +1,13 @@
 #include "graphics.h"
 
 Graphics::Graphics(Game &thegame):
-	game(thegame)
+	game(&thegame),
+	screen(NULL),
+	font(NULL),
+	yellowfont(NULL),
+	mePreviousDirection(PLAYER_DIRECTION_NORMAL),
+	otherplayerPreviousDirection(PLAYER_DIRECTION_NORMAL),
+	background(NULL)
 {
 	// Now we get ourself a widthxheightx32 surface...
 	screen=SDL_SetVideoMode(VID_RESOLUTION_X,VID_RESOLUTION_Y, 16, SDL_SWSURFACE);
@@ -44,7 +50,7 @@ Graphics::~Graphics()
 
 void Graphics::draw()
 {
-	switch(game.state) {
+	switch(game->state) {
 		case GAME_MENU:
 			drawmenu();
 			break;
@@ -73,7 +79,7 @@ void Graphics::drawplay()
 	// We first fill the entire screen with black
 	SDL_FillRect(screen,0,0);
 	// Draw the background
-	drawimg(background,0,0,VID_RESOLUTION_X,VID_RESOLUTION_Y,0,0);
+	drawbackground();
 	// Draw the players
 	drawplayers();
 	// Draw the scores
@@ -82,9 +88,27 @@ void Graphics::drawplay()
 	SDL_Flip(screen);
 }
 
+void Graphics::drawbackground()
+{
+	uint mapwidth = game.map->width;
+	uint mapheight = game.map->height;
+	uint widthblock = VID_RESOLUTION_X / mapwidth;
+	uint heightblock = VID_RESOLUTION_Y / mapheight;
+	if (background == NULL || game.mapid != mapid) {
+		mapid = game.mapid;
+		for(uint i; i < mapwidth; ++i) {
+			for (uint j; j < mapheight; ++j) {
+				switch (game.map->get(i,j))
+					case MAP_CLEAR:
+						
+
+
+	drawimg(background,0,0,VID_RESOLUTION_X,VID_RESOLUTION_Y,0,0);
+}
+
 void Graphics::drawplayers()
 {
-	switch (game.me.direction)
+	switch (game->me.direction)
 	{	case PLAYER_DIRECTION_NORMAL:
 			if (mePreviousDirection != PLAYER_DIRECTION_NORMAL)	{
 				meNormal.stopAnim();
@@ -111,7 +135,7 @@ void Graphics::drawplayers()
 			exit(1);
 	}
 
-	switch (game.otherplayer.direction)
+	switch (game->otherplayer.direction)
 	{	case PLAYER_DIRECTION_NORMAL:
 			if (otherplayerPreviousDirection != PLAYER_DIRECTION_NORMAL)	{
 				otherplayerNormal.stopAnim();
@@ -142,9 +166,9 @@ void Graphics::drawplayers()
 void Graphics::drawscores()
 {
 	drawString(screen, font, 5,5,"Score Player1:");
-	drawString(screen, font, 80,5,"%u",game.me.score);
+	drawString(screen, font, 80,5,"%u",game->me.score);
 	drawString(screen, font, 200,5,"Score Player2:");
-	drawString(screen, font, 280,5,"%u",game.otherplayer.score);
+	drawString(screen, font, 280,5,"%u",game->otherplayer.score);
 }
 
 void Graphics::drawimg(SDL_Surface *img, int x, int y, int w, int h, int x2, int y2)

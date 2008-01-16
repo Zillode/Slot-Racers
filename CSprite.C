@@ -12,12 +12,18 @@
 
 #include "CSprite.h"
 
-int CSprite::init(CSpriteBase *base, SDL_Surface *screen):
-	mSpriteBas(base),
-	mScreen(screen),
+CSprite::CSprite():
 	mAnimating(0),
 	mSpeed(1)
+{ }
+
+CSprite::~CSprite()
+{ }
+
+int CSprite::init(CSpriteBase *base, SDL_Surface *screen)
 {
+  mScreen = screen;
+  mSpriteBase = base;
   if(mSpriteBase->mBuilt)
   {
     if(mSpriteBase->mNumframes>1) mAnimating=1;
@@ -63,6 +69,7 @@ void CSprite::draw()
 	    }
 	} else {
 		mAnimating = 0;
+	}
   }
 
   if(mDrawn==0) mDrawn=1;

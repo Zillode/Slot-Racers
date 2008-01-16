@@ -1,6 +1,8 @@
 #include "map.h"
 
-Map::Map(uint width, uint height):
+Map::Map(uint thewidth, uint theheight):
+	width(thewidth),
+	height(theheight),
 	map(width, vector<uint>(height,MAP_CLEAR))
 { }
 

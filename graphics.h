@@ -2,10 +2,11 @@
 #define GRAPHICS_H
 
 #include "main.h"
-#include "game.h"
 #include "CSprite.h"
 #include "CSpriteBase.h"
 #include "font.h"
+
+class Game;
 
 class Graphics {
 	public:
@@ -22,13 +23,16 @@ class Graphics {
 		void drawsettings();
 		void drawimg(SDL_Surface *img, int x, int y, int w, int h, int x2, int y2);
 		void drawplayers();
+		void drawbackground();
 		void drawscores();
 
 		// == Vars ==
 		// screen - our main surface and a background
 		SDL_Surface *screen, *background;
+		// MapId so that the background is in sync with the map
+		uint mapid;
 		// keep a reference to the game (to ask the status for drawing / information)
-		Game &game;
+		Game *game;
 		// Fonts
 		SDLFont *font, *yellowfont;
 		uint mePreviousDirection;
