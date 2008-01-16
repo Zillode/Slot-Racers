@@ -22,9 +22,13 @@ class Graphics {
 		void drawplay();
 		void drawsettings();
 		void drawimg(SDL_Surface *img, int x, int y, int w, int h, int x2, int y2);
+		void drawimg(SDL_Surface *img, SDL_Surface *dest, int x, int y, int w, int h, int x2, int y2);
 		void drawplayers();
 		void drawbackground();
 		void drawscores();
+		void softstrech();
+		void moveplayer(uint x, uint y);
+		void moveenemy(uint x, uint y);
 
 		// == Vars ==
 		// screen - our main surface and a background
@@ -37,6 +41,8 @@ class Graphics {
 		SDLFont *font, *yellowfont;
 		uint mePreviousDirection;
 		uint otherplayerPreviousDirection;
+		// Wall SpriteBase (for resizing)
+		CSpriteBase mapWallSpriteBase;
 		// PlayerSprites for me
 		CSprite meNormal;
 		CSprite meLeft;

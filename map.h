@@ -1,10 +1,10 @@
 #ifndef MAP_H
 #define MAP_H
 
-#include "main.h"
-
-using std::vector;
+#include <string>
+#include <vector>
 using std::string;
+using std::vector;
 
 class Map {
 	public:
@@ -13,11 +13,13 @@ class Map {
 		~Map();
 		uint get(uint x,uint y);
 		uint put(uint x,uint y, uint val);
-		const uint width;
-		const uint height;
+		uint getwidth();
+		uint getheight();
 	private:
 		vector< vector<uint> > map;
 		Map(const Map & m);
+		uint width;
+		uint height;
 };
 
 #endif

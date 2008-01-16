@@ -1,8 +1,9 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "player.h"
 #include "map.h"
+#include "player.h"
+#include "main.h"
 
 class Game {
 	public:
@@ -20,6 +21,7 @@ class Game {
 		Player otherplayer;
 		uint mapid;
 		Map *map;
+		uint sdlgt;
 
 	private:
 		Game(const Game &game);

@@ -8,9 +8,21 @@ class Player {
 
 		// == Vars ==
 		uint score;
+		uint directiongoal;
+		uint directionmoving;
+		uint speed;
+		uint hittime;
+		Bullet bullet;
 		uint posx;
 		uint posy;
-		uint direction;
+
+		// == Functions ==
+		void left();
+		void right();
+		void up();
+		void down();
+		void shoot();
+
 	private:
 		Player(const Player &player);
 };

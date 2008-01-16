@@ -16,6 +16,8 @@ class CSpriteBase
 
   CSpriteFrame *mAnim;
   int mBuilt, mNumframes, mW, mH;
+  void softStrech(int nW, int nH);
+
 };
 
 #endif

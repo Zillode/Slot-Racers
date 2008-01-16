@@ -47,3 +47,24 @@ int CSpriteBase::init(char *dir)
   return 0;
 }
 
+void CSpriteBase::softStrech(int nW, int nH) {
+	for (int i; i < mNumframes; ++i) {
+		SDL_Surface *imgold = mAnim[i].image;
+		SDL_Rect src;
+		src.x = 0;
+		src.y = 0;
+		src.w = mW;
+		src.h = mH;
+		SDL_Rect dest;
+		dest.x = 0;
+		dest.y = 0;
+		dest.w = nW;
+		dest.h = nH;
+		mAnim[i].image = new SDL_Surface();
+		SDL_SoftStretch(imgold,&src,mAnim[i].image,&dest);
+		delete imgold;
+	}
+	mW = nW;
+	mH = nH;
+}
+

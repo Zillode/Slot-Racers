@@ -13,7 +13,7 @@ Graphics::Graphics(Game &thegame):
 	screen=SDL_SetVideoMode(VID_RESOLUTION_X,VID_RESOLUTION_Y, 16, SDL_SWSURFACE);
 	if ( screen == NULL )
 	{
-    	printf("Unable to set %ux%u video: %s\n", VID_RESOLUTION_X, VID_RESOLUTION_Y, SDL_GetError());
+		printf("Unable to set %ux%u video: %s\n", VID_RESOLUTION_X, VID_RESOLUTION_Y, SDL_GetError());
 		exit(1);
 	}
 	// Hide the cursor
@@ -21,6 +21,8 @@ Graphics::Graphics(Game &thegame):
 	// Load the font
 	font = initFont("data/font");
 	yellowfont = initFont("data/font",1,1,0);
+	// Load the wall image
+	mapWallSpriteBase.init("data/wall");
 	// Load the images for me
 	playerNormalSpriteBase.init("data/playernormal");
 	playerLeftSpriteBase.init("data/playerleft");
@@ -88,26 +90,68 @@ void Graphics::drawplay()
 	SDL_Flip(screen);
 }
 
+void Graphics::softstrech() {
+	// Strech to the resolution
+	uint block_width = VID_RESOLUTION_X / game->map->getwidth();
+	uint block_height = VID_RESOLUTION_Y / game->map->getheight();
+	mapWallSpriteBase.softStrech(block_width, block_height);
+	playerNormalSpriteBase.softStrech(block_width, block_height);
+	playerLeftSpriteBase.softStrech(block_width, block_height);
+	playerRightSpriteBase.softStrech(block_width, block_height);
+	playerBulletSpriteBase.softStrech(block_width, block_height);
+	otherplayerNormalSpriteBase.softStrech(block_width, block_height);
+	otherplayerLeftSpriteBase.softStrech(block_width, block_height);
+	otherplayerRightSpriteBase.softStrech(block_width, block_height);
+	otherplayerBulletSpriteBase.softStrech(block_width, block_height);
+}
+
+
 void Graphics::drawbackground()
 {
-	uint mapwidth = game.map->width;
-	uint mapheight = game.map->height;
-	uint widthblock = VID_RESOLUTION_X / mapwidth;
-	uint heightblock = VID_RESOLUTION_Y / mapheight;
-	if (background == NULL || game.mapid != mapid) {
-		mapid = game.mapid;
-		for(uint i; i < mapwidth; ++i) {
-			for (uint j; j < mapheight; ++j) {
-				switch (game.map->get(i,j))
+	if (background == NULL || game->mapid != mapid) {
+		if (background != NULL)
+			delete background;
+		background = new SDL_Surface();
+		mapid = game->mapid;
+		// Strech the images to the map <-> resolution
+		softstrech();
+		// Draw everything on the background surface
+		for(uint i; i < game->map->getwidth(); ++i) {
+			for (uint j; j < game->map->getheight(); ++j) {
+				switch (game->map->get(i,j)) {
 					case MAP_CLEAR:
-						
-
-
-	drawimg(background,0,0,VID_RESOLUTION_X,VID_RESOLUTION_Y,0,0);
+						// The Default white background
+						break;
+					case MAP_WALL:
+						drawimg(mapWallSpriteBase.mAnim[0].image, background, 0, 0, mapWallSpriteBase.mW, mapWallSpriteBase.mH, i, j);
+						break;
+					default:
+						printf("Fatal error: DrawBackground()");
+						exit(1);
+				}
+			}
+		}
+	}
+	drawimg(background, 0, 0, VID_RESOLUTION_X, VID_RESOLUTION_Y, 0, 0);
 }
 
 void Graphics::drawplayers()
 {
+	// If 3 seconds have passed since the player got hit then
+	if(game->sdlgt - game->me.hittime>3000)	{
+		// Stop the ships blinking animation
+		meNormal.stopAnim();
+		// Show the frame of animation with the ship on it
+		meNormal.setFrame(0);
+	}
+	// If 3 seconds have passed since the other player got hit then
+	if(game->sdlgt - game->otherplayer.hittime>3000) {
+		// Stop the ships blinking animation
+		enemyNormal.stopAnim();
+		// Show the frame of animation with the ship on it
+		enemynormal.setFrame(0);
+	}
+
 	switch (game->me.direction)
 	{	case PLAYER_DIRECTION_NORMAL:
 			if (mePreviousDirection != PLAYER_DIRECTION_NORMAL)	{
@@ -173,6 +217,11 @@ void Graphics::drawscores()
 
 void Graphics::drawimg(SDL_Surface *img, int x, int y, int w, int h, int x2, int y2)
 {
+	drawimg(img, screen, x, y, w, h, x2, y2);
+}
+
+void Graphics::drawimg(SDL_Surface *img, SDL_Surface *destimg, int x, int y, int w, int h, int x2, int y2)
+{
   SDL_Rect dest;
   dest.x = x;
   dest.y = y;
@@ -181,11 +230,14 @@ void Graphics::drawimg(SDL_Surface *img, int x, int y, int w, int h, int x2, int
   dest2.y = y2;
   dest2.w = w;
   dest2.h = h;
-  SDL_BlitSurface(img, &dest2, screen, &dest);
+  SDL_BlitSurface(img, &dest2, destimg, &dest);
 }
+
 
 void Graphics::drawsettings()
 {
 	// TODO
 }
 
+void Graphics::moveplayer() {
+	
