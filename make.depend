@@ -183,8 +183,8 @@ game.o: game.C main.h /usr/include/c++/4.1.3/vector \
   /usr/include/SDL/SDL_video.h /usr/include/SDL/SDL_joystick.h \
   /usr/include/SDL/SDL_quit.h /usr/include/SDL/SDL_loadso.h \
   /usr/include/SDL/SDL_timer.h /usr/include/SDL/SDL_version.h game.h \
-  map.h player.h graphics.h CSprite.h /usr/include/SDL/SDL.h \
-  CSpriteBase.h font.h
+  graphics.h CSprite.h /usr/include/SDL/SDL.h CSpriteBase.h font.h map.h \
+  player.h
 graphics.o: graphics.C graphics.h main.h /usr/include/c++/4.1.3/vector \
   /usr/include/c++/4.1.3/bits/functexcept.h \
   /usr/include/c++/4.1.3/exception_defines.h \
@@ -364,8 +364,8 @@ main.o: main.C main.h /usr/include/c++/4.1.3/vector \
   /usr/include/SDL/SDL_video.h /usr/include/SDL/SDL_joystick.h \
   /usr/include/SDL/SDL_quit.h /usr/include/SDL/SDL_loadso.h \
   /usr/include/SDL/SDL_timer.h /usr/include/SDL/SDL_version.h game.h \
-  map.h player.h graphics.h CSprite.h /usr/include/SDL/SDL.h \
-  CSpriteBase.h font.h
+  graphics.h CSprite.h /usr/include/SDL/SDL.h CSpriteBase.h font.h map.h \
+  player.h
 map.o: map.C map.h /usr/include/c++/4.1.3/string \
   /usr/include/c++/4.1.3/i486-linux-gnu/bits/c++config.h \
   /usr/include/c++/4.1.3/i486-linux-gnu/bits/os_defines.h \
@@ -455,8 +455,8 @@ map.o: map.C map.h /usr/include/c++/4.1.3/string \
   /usr/include/SDL/SDL_video.h /usr/include/SDL/SDL_joystick.h \
   /usr/include/SDL/SDL_quit.h /usr/include/SDL/SDL_loadso.h \
   /usr/include/SDL/SDL_timer.h /usr/include/SDL/SDL_version.h game.h \
-  player.h graphics.h CSprite.h /usr/include/SDL/SDL.h CSpriteBase.h \
-  font.h
+  graphics.h CSprite.h /usr/include/SDL/SDL.h CSpriteBase.h font.h \
+  player.h
 player.o: player.C main.h /usr/include/c++/4.1.3/vector \
   /usr/include/c++/4.1.3/bits/functexcept.h \
   /usr/include/c++/4.1.3/exception_defines.h \
@@ -546,5 +546,5 @@ player.o: player.C main.h /usr/include/c++/4.1.3/vector \
   /usr/include/SDL/SDL_video.h /usr/include/SDL/SDL_joystick.h \
   /usr/include/SDL/SDL_quit.h /usr/include/SDL/SDL_loadso.h \
   /usr/include/SDL/SDL_timer.h /usr/include/SDL/SDL_version.h game.h \
-  map.h player.h graphics.h CSprite.h /usr/include/SDL/SDL.h \
-  CSpriteBase.h font.h
+  graphics.h CSprite.h /usr/include/SDL/SDL.h CSpriteBase.h font.h map.h \
+  player.h

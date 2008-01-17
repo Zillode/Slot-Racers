@@ -14,13 +14,19 @@ int main(int argc, const char* argv[]) {
 	// We need the game controller
 	Game game;
 	// We need Graphics
-	Graphics graphics(game);
+	Graphics graphics(&game);
+	// Make a link from game to graphics
+	game.setgraphics(&graphics);
+	// TODO: move this to the menu
+	game.start();
 
+	// Main loop
 	while(!game.stop()) {
 		game.check_events();
 		graphics.draw();
 	    SDL_Delay(1);
 	}
 
+	// Clear exit
 	return 0;
 }

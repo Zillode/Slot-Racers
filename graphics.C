@@ -1,7 +1,7 @@
 #include "graphics.h"
 
-Graphics::Graphics(Game &thegame):
-	game(&thegame),
+Graphics::Graphics(Game *thegame):
+	game(thegame),
 	screen(NULL),
 	font(NULL),
 	yellowfont(NULL),
@@ -10,7 +10,7 @@ Graphics::Graphics(Game &thegame):
 	background(NULL)
 {
 	// Now we get ourself a widthxheightx32 surface...
-	screen=SDL_SetVideoMode(VID_RESOLUTION_X,VID_RESOLUTION_Y, 16, SDL_SWSURFACE);
+	screen = SDL_SetVideoMode(VID_RESOLUTION_X,VID_RESOLUTION_Y, 16, SDL_SWSURFACE);
 	if ( screen == NULL )
 	{
 		printf("Unable to set %ux%u video: %s\n", VID_RESOLUTION_X, VID_RESOLUTION_Y, SDL_GetError());
@@ -36,8 +36,11 @@ Graphics::Graphics(Game &thegame):
 	// Load the images for the other player's bullet
 	otherplayerBulletSpriteBase.init("data/enemybullet");
 	// My Sprites
+	printf("OK\n");
 	meNormal.init(&playerNormalSpriteBase,screen);
+	printf("OK\n");
 	meLeft.init(&playerLeftSpriteBase,screen);
+	printf("OK\n");
 	meRight.init(&playerRightSpriteBase,screen);
 	myBullet.init(&playerBulletSpriteBase,screen);
 	// Other player's sprites
@@ -48,7 +51,12 @@ Graphics::Graphics(Game &thegame):
 }
 
 Graphics::~Graphics()
-{ }
+{
+	delete font;
+	delete yellowfont;
+	delete background;
+	delete screen;
+}
 
 void Graphics::draw()
 {
@@ -94,6 +102,10 @@ void Graphics::softstrech() {
 	// Strech to the resolution
 	uint block_width = VID_RESOLUTION_X / game->map->getwidth();
 	uint block_height = VID_RESOLUTION_Y / game->map->getheight();
+	game->me.width = block_width;
+	game->me.height = block_height;
+	game->otherplayer.width = block_width;
+	game->otherplayer.height = block_height;
 	mapWallSpriteBase.softStrech(block_width, block_height);
 	playerNormalSpriteBase.softStrech(block_width, block_height);
 	playerLeftSpriteBase.softStrech(block_width, block_height);
@@ -114,10 +126,10 @@ void Graphics::drawbackground()
 		background = new SDL_Surface();
 		mapid = game->mapid;
 		// Strech the images to the map <-> resolution
-		softstrech();
+		//softstrech();
 		// Draw everything on the background surface
-		for(uint i; i < game->map->getwidth(); ++i) {
-			for (uint j; j < game->map->getheight(); ++j) {
+		for(uint i(0); i < game->map->getwidth(); ++i) {
+			for (uint j(0); j < game->map->getheight(); ++j) {
 				switch (game->map->get(i,j)) {
 					case MAP_CLEAR:
 						// The Default white background
@@ -147,12 +159,12 @@ void Graphics::drawplayers()
 	// If 3 seconds have passed since the other player got hit then
 	if(game->sdlgt - game->otherplayer.hittime>3000) {
 		// Stop the ships blinking animation
-		enemyNormal.stopAnim();
+		otherplayerNormal.stopAnim();
 		// Show the frame of animation with the ship on it
-		enemynormal.setFrame(0);
+		otherplayerNormal.setFrame(0);
 	}
 
-	switch (game->me.direction)
+	switch (game->me.directiongoal)
 	{	case PLAYER_DIRECTION_NORMAL:
 			if (mePreviousDirection != PLAYER_DIRECTION_NORMAL)	{
 				meNormal.stopAnim();
@@ -179,7 +191,7 @@ void Graphics::drawplayers()
 			exit(1);
 	}
 
-	switch (game->otherplayer.direction)
+	switch (game->otherplayer.directiongoal)
 	{	case PLAYER_DIRECTION_NORMAL:
 			if (otherplayerPreviousDirection != PLAYER_DIRECTION_NORMAL)	{
 				otherplayerNormal.stopAnim();
@@ -239,5 +251,6 @@ void Graphics::drawsettings()
 	// TODO
 }
 
-void Graphics::moveplayer() {
-	
+void Graphics::moveplayer(uint nX, uint xY) {
+	// TODO
+}

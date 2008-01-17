@@ -10,9 +10,22 @@ class Game;
 
 class Graphics {
 	public:
-		Graphics(Game &thegame);
+		Graphics(Game *thegame);
 		~Graphics();
 		void draw();
+
+		// PlayerSprites for me
+		CSprite meNormal;
+		CSprite meLeft;
+		CSprite meRight;
+		CSprite myBullet;
+
+		// PlayerSprites for enemy
+		CSprite otherplayerNormal;
+		CSprite otherplayerLeft;
+		CSprite otherplayerRight;
+		CSprite otherplayerBullet;
+
 	private:
 		// No copy allowed
 		Graphics(const Graphics &g);
@@ -43,20 +56,10 @@ class Graphics {
 		uint otherplayerPreviousDirection;
 		// Wall SpriteBase (for resizing)
 		CSpriteBase mapWallSpriteBase;
-		// PlayerSprites for me
-		CSprite meNormal;
-		CSprite meLeft;
-		CSprite meRight;
-		CSprite myBullet;
 		CSpriteBase playerNormalSpriteBase;
 		CSpriteBase playerLeftSpriteBase;
 		CSpriteBase playerRightSpriteBase;
 		CSpriteBase playerBulletSpriteBase;
-		// PlayerSprites for enemy
-		CSprite otherplayerNormal;
-		CSprite otherplayerLeft;
-		CSprite otherplayerRight;
-		CSprite otherplayerBullet;
 		CSpriteBase otherplayerNormalSpriteBase;
 		CSpriteBase otherplayerLeftSpriteBase;
 		CSpriteBase otherplayerRightSpriteBase;

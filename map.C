@@ -1,15 +1,17 @@
 #include "map.h"
 #include "main.h"
 
-Map::Map(uint thewidth, uint theheight):
+Map::Map(Game *thegame, uint thewidth, uint theheight):
 	width(thewidth),
 	height(theheight),
-	map(width, vector<uint>(height, MAP_CLEAR))
+	game(thegame),
+	map(thewidth, vector<uint>(theheight, MAP_CLEAR))
 { }
 
-Map::Map(string &filename):
+Map::Map(Game *thegame, string &filename):
 	width(0),
 	height(0),
+	game(thegame),
 	map(0)
 {
 	// TODO: vul vector adhv filename (.bsp)
@@ -19,6 +21,11 @@ Map::Map(string &filename):
 
 Map::~Map()
 { }
+
+void Map::setplayers() {
+	game->me.move(0,0);
+	game->otherplayer.move(30,30);
+}
 
 uint Map::get(uint x, uint y)
 {

@@ -14,7 +14,8 @@
 
 CSprite::CSprite():
 	mAnimating(0),
-	mSpeed(1)
+	mSpeed(1),
+	mFrame(0)
 { }
 
 CSprite::~CSprite()
@@ -76,5 +77,6 @@ void CSprite::draw()
 
   SDL_Rect dest;
   dest.x = (int)mX; dest.y = (int)mY;
-  SDL_BlitSurface(mSpriteBase->mAnim[mFrame].image, NULL, mScreen, &dest);
+  printf("%i\n",mFrame);
+  //SDL_BlitSurface(mSpriteBase->mAnim[mFrame].image, NULL, mScreen, &dest);
 }

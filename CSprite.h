@@ -46,16 +46,16 @@ class CSprite
 
   float getx() {return mX;}
   float gety() {return mY;}
-  
+
   int getw() {return mSpriteBase->mAnim[0].image->w;}
   int geth() {return mSpriteBase->mAnim[0].image->h;}
 
   private:
   int mFrame;
   float mX, mY, mOldX, mOldY;
+  float mSpeed;
   int mAnimating;
   int mDrawn;
-  float mSpeed;
   long mLastupdate;
   CSpriteBase *mSpriteBase;
   SDL_Surface *mBackreplacement;

@@ -6,13 +6,18 @@ Game::Game(): state(GAME_PLAY),
 	otherplayer(),
 	map(NULL)
 {
-	map = new Map(50,50);
+	map = new Map(this, 50,50);
 	mapid = 0;
 	map->put(20,20,MAP_WALL); // TODO
 }
 
 Game::~Game()
 { }
+
+void Game::start() {
+	state = GAME_PLAY;
+	map->setplayers();
+}
 
 bool Game::stop()
 {
@@ -47,7 +52,7 @@ void Game::check_events()
     // If the game isn't paused then we increase the value of sdlgt.
     // Basically sdlgt tells of how many milliseconds the game has been played
     // (w/o being paused)
-    if(!paused)
+    if (state != GAME_PAUSE)
     {
       sdlgt+=dt*10;
     }
@@ -56,7 +61,7 @@ void Game::check_events()
     SDL_Event event;
 	SDL_PollEvent(&event);
 	// If we must quit, then do so
-	if(event.type == SDL_QUIT) { done = 1; }
+	if(event.type == SDL_QUIT) { state = GAME_STOP; }
 
 	// Has a key been pressed down?
 	if(event.type == SDL_KEYDOWN) {
@@ -68,17 +73,18 @@ void Game::check_events()
 
 		if(event.key.keysym.sym == SDLK_p)
 		{
-			if (state == GAME_PAUSE)
-				state = GAME_PLAY
-			else
+			if (state == GAME_PAUSE) {
+				state = GAME_PLAY;
+			} else {
 				state = GAME_PAUSE;
+			}
 		}
 
 		switch (state)
 		{
 			case GAME_MENU:
 				// TODO
-				break;				
+				break;
 			case GAME_PLAY:
 				sdlgt+=dt*10;
 				processgameplay(event);
@@ -97,13 +103,14 @@ void Game::check_events()
 }
 
 void Game::processgameplay(SDL_Event &event) {
-		processgameplayeplayer(event);
-		if (network_game)
-			processgameplaynetworkenemy()
-		else
+		processgameplayplayer(event);
+		if (networkgame) {
+			processgameplaynetworkenemy();
+		} else {
 			processgameplayenemy(event);
-		processgameplaystep(player);
-		processgameplaystep(enemy);
+		}
+		processgameplaystep(me);
+		processgameplaystep(otherplayer);
 }
 
 void Game::processgameplaynetworkenemy() {
@@ -112,277 +119,256 @@ void Game::processgameplaynetworkenemy() {
 	exit(1);
 }
 
-void Game::processgameplayplayer(SDL_Event &event) {
-		// Player = me = ASDWE
-		if (event.key.keysym.sym == SDLK_a && !(event.key.keysym.sym == SDLK_d))
-			player.left();
-		if (event.key.keysym.sym == SDLK_d && !(event.key.keysym.sym == SDLK_a))
-			player.right();
-		if (event.key.keysym.sym == SDLK_w)
-			player.up();
-		if (event.key.keysym.sym == SDLK_s)
-			player.down();
-		if (event.key.keysym.sym == SDLK_e) {
-			// Then add a bullet
-			player.shoot();
-			// And play a corresponding sound
-			// Mix_PlayChannel(0,shot,0); TODO
-		}
-		
+void Game::setgraphics(Graphics *thegraphics) {
+	graphics = thegraphics;
+	me.setgraphics(graphics, &graphics->meNormal, &graphics->meLeft, &graphics->meRight, &graphics->myBullet);
+	otherplayer.setgraphics(graphics, &graphics->otherplayerNormal, &graphics->otherplayerLeft, &graphics->otherplayerRight, &graphics->otherplayerBullet);
 }
 
-bool Game::trymoveup(Player &player, uint speed) {
-	uint posx = player.posx;
-	uint posy = player.posy;
-	if (speed == 0)
-		return false;
-	if (speed > 0 && (map->get(posx, posy + speed) == MAP_CLEAR)) {
-		player.move(posx, posy + speed);
+bool Game::trymoveup(Player &player) {
+	uint nposx = player.posx;
+	uint nposy = player.posy - 1;
+	uint mapblockwidth = VID_RESOLUTION_X / map->getwidth();
+	uint mapblockheight = VID_RESOLUTION_Y / map->getheight();
+	uint newblockposx = (nposx / mapblockwidth);
+	uint newblockposy = (nposy / mapblockheight);
+	if (map->get(newblockposx, newblockposy) == MAP_CLEAR) {
+		player.move(nposx, nposy);
 		return true;
 	} else {
-		return trymoveup(player, speed - 1);
+		return false;
 	}
 }
 
-bool Game::trymovedown(Player &player, uint speed) {
-	uint posx = player.posx;
-	uint posy = player.posy;
-	if (speed == 0)
-		return false;
-	if (speed > 0 && (map->get(posx, posy - speed) == MAP_CLEAR)) {
-		player.move(posx, posy - speed);
+bool Game::trymovedown(Player &player) {
+	uint nposx = player.posx;
+	uint nposy = player.posy + 1;
+	uint mapblockwidth = VID_RESOLUTION_X / map->getwidth();
+	uint mapblockheight = VID_RESOLUTION_Y / map->getheight();
+	uint newblockposx = (nposx / mapblockwidth);
+	uint newblockposy = ((nposy + player.height) / mapblockheight);
+	if (map->get(newblockposx, newblockposy) == MAP_CLEAR) {
+		player.move(nposx, nposy);
 		return true;
 	} else {
-		return trymoveup(player, speed - 1);
+		return false;
 	}
 }
 
-bool Game::trymoveleft(Player &player, uint speed) {
-	uint posx = player.posx;
-	uint posy = player.posy;
-	if (speed == 0)
-		return false;
-	if (speed > 0 && (map->get(posx - speed, posy) == MAP_CLEAR)) {
-		player.move(posx - speed, posy);
+bool Game::trymoveleft(Player &player) {
+	uint nposx = player.posx - 1;
+	uint nposy = player.posy;
+	uint mapblockwidth = VID_RESOLUTION_X / map->getwidth();
+	uint mapblockheight = VID_RESOLUTION_Y / map->getheight();
+	uint newblockposx = (nposx / mapblockwidth);
+	uint newblockposy = (nposy / mapblockheight);
+	if (map->get(newblockposx, newblockposy) == MAP_CLEAR) {
+		player.move(nposx, nposy);
 		return true;
 	} else {
-		return trymoveup(player, speed - 1);
+		return false;
 	}
 }
 
-bool Game::trymoveright(Player &player, uint speed) {
-	uint posx = player.posx;
-	uint posy = player.posy;
-	if (speed == 0)
-		return false;
-	if (speed > 0 && (map->get(posx + speed, posy) == MAP_CLEAR)) {
-		player.move(posx + speed, posy);
+bool Game::trymoveright(Player &player) {
+	uint nposx = player.posx + 1;
+	uint nposy = player.posy;
+	uint mapblockwidth = VID_RESOLUTION_X / map->getwidth();
+	uint mapblockheight = VID_RESOLUTION_Y / map->getheight();
+	uint newblockposx = ((nposx + player.width) / mapblockwidth);
+	uint newblockposy = (nposy / mapblockheight);
+	if (map->get(newblockposx, newblockposy) == MAP_CLEAR) {
+		player.move(nposx, nposy);
 		return true;
 	} else {
-		return trymoveup(player, speed - 1);
+		return false;
 	}
 }
 
 void Game::processgameplaystep(Player &player) {
+	if (player.speeddone > OBJECT_MAX_SPEED)
+		player.speeddone = 0;
+	// If his speed is high enough to move at this point, make a move!
+	if (player.speed > player.speeddone) {
 		switch (player.directiongoal) {
 			// ================= DIRECTION NORMAL =================
 			// When the player doesn't wants to turn
-			case PLAYER_DIRECTION_NORMAL:
-				// If it's possible, just go in the same direction
-				switch (player.directionmoving) {
-					case PLAYER_DIRECTION_MOVING_UP:
-						// Try to move up
-						if (player.speed > 0)
-							// When player has speed > 0, he can move
-							if (!trymoveup(player, player.speed))
-								// If move up failed, do random right/left
-								if ((rand() % 2) == 0) {
-									if (!trymoveright(player, player.speed))
-										// If move right also failed, try left
-										trymoveleft(player, player.speed);
-								} else {
-									if (!trymoveleft(player, player.speed))
-										// If move right also failed, try left
-										trymoveright(player, player.speed);
-								}
-						break;
-					case PLAYER_DIRECTION_MOVING_LEFT:
-						if (player.speed > 0)
-							if (!trymoveleft(player, player.speed))
-								if ((rand() % 2) == 0) {
-									if (!trymoveup(player, player.speed))
-										trymovedown(player, player.speed);
-								} else {
-									if (!trymovedown(player, player.speed))
-										trymoveup(player, player.speed);
-								}
-						break;
-					case PLAYER_DIRECTION_MOVING_RIGHT:
-						if (player.speed > 0)
-							if (!trymoveright(player, player.speed))
-								if ((rand() % 2) == 0) {
-									if (!trymoveup(player, player.speed))
-										trymovedown(player, player.speed);
-								} else {
-									if (!trymovedown(player, player.speed))
-										trymoveup(player, player.speed);
-								}
-						break;
-					case PLAYER_DIRECTION_MOVING_DOWN:
-						if (player.speed > 0)
-							if (!trymovedown(player, player.speed))
-								if ((rand() % 2) == 0) {
-									if (!trymoveleft(player, player.speed))
-										trymoveright(player, player.speed);
-								} else {
-									if (!trymoveright(player, player.speed))
-										trymoveleft(player, player.speed);
-								}
-						break;
-					default:
-						printf("Fatal error: processgameplaystep()");
-						exit(1);
-				}
-			// ================= DIRECTION LEFT =================
-			// When the player wants to turn left
-			case PLAYER_DIRECTION_LEFT:
-				// If it's possible, just go in the same direction
-				switch (player.directionmoving) {
-					case PLAYER_DIRECTION_MOVING_UP:
-						// Try to move up
-						if (player.speed > 0)
-							// When player has speed > 0, he can move
-							if (!trymoveleft(player, player.speed))
-								// If move up failed, do random right/left
-								if ((rand() % 2) == 0) {
-									if (!trymoveright(player, player.speed))
-										// If move right also failed, try left
-										trymoveleft(player, player.speed);
-								} else {
-									if (!trymoveleft(player, player.speed))
-										// If move right also failed, try left
-										trymoveright(player, player.speed);
-								}
-						break;
-					case PLAYER_DIRECTION_MOVING_LEFT:
-						if (player.speed > 0)
-							if (!trymoveleft(player, player.speed))
-								if ((rand() % 2) == 0) {
-									if (!trymoveup(player, player.speed))
-										trymovedown(player, player.speed);
-								} else {
-									if (!trymovedown(player, player.speed))
-										trymoveup(player, player.speed);
-								}
-						break;
-					case PLAYER_DIRECTION_MOVING_RIGHT:
-						if (player.speed > 0)
-							if (!trymoveright(player, player.speed))
-								if ((rand() % 2) == 0) {
-									if (!trymoveup(player, player.speed))
-										trymovedown(player, player.speed);
-								} else {
-									if (!trymovedown(player, player.speed))
-										trymoveup(player, player.speed);
-								}
-						break;
-					case PLAYER_DIRECTION_MOVING_DOWN:
-						if (player.speed > 0)
-							if (!trymovedown(player, player.speed))
-								if ((rand() % 2) == 0) {
-									if (!trymoveleft(player, player.speed))
-										trymoveright(player, player.speed);
-								} else {
-									if (!trymoveright(player, player.speed))
-										trymoveleft(player, player.speed);
-								}
-						break;
-					default:
-						printf("Fatal error: processgameplaystep()");
-						exit(1);
-				}
+		case PLAYER_DIRECTION_NORMAL:
+			// If it's possible, just go in the same direction
+			switch (player.directionmoving) {
+			case PLAYER_DIRECTION_MOVING_UP:
+				// Try to move up
+				if (player.speed > 0)
+					// When player has speed > 0, he can move
+					if (!trymoveup(player))
+						// If move up failed, do random right/left
+						if ((rand() % 2) == 0) {
+							if (!trymoveright(player))
+								// If move right also failed, try left
+								trymoveleft(player);
+						} else {
+							if (!trymoveleft(player))
+								// If move right also failed, try left
+								trymoveright(player);
+						}
 				break;
-			// ================= DIRECTION LEFT =================
-			// When the player wants to turn left
-			case PLAYER_DIRECTION_NORMAL:
-				// If it's possible, just go in the same direction
-				switch (player.directionmoving) {
-					case PLAYER_DIRECTION_MOVING_UP:
-						// Try to move up
-						if (player.speed > 0)
-							// When player has speed > 0, he can move
-							if (!trymoveup(player, player.speed))
-								// If move up failed, do random right/left
-								if ((rand() % 2) == 0) {
-									if (!trymoveright(player, player.speed))
-										// If move right also failed, try left
-										trymoveleft(player, player.speed);
-								} else {
-									if (!trymoveleft(player, player.speed))
-										// If move right also failed, try left
-										trymoveright(player, player.speed);
-								}
-						break;
-					case PLAYER_DIRECTION_MOVING_LEFT:
-						if (player.speed > 0)
-							if (!trymoveleft(player, player.speed))
-								if ((rand() % 2) == 0) {
-									if (!trymoveup(player, player.speed))
-										trymovedown(player, player.speed);
-								} else {
-									if (!trymovedown(player, player.speed))
-										trymoveup(player, player.speed);
-								}
-						break;
-					case PLAYER_DIRECTION_MOVING_RIGHT:
-						if (player.speed > 0)
-							if (!trymoveright(player, player.speed))
-								if ((rand() % 2) == 0) {
-									if (!trymoveup(player, player.speed))
-										trymovedown(player, player.speed);
-								} else {
-									if (!trymovedown(player, player.speed))
-										trymoveup(player, player.speed);
-								}
-						break;
-					case PLAYER_DIRECTION_MOVING_DOWN:
-						if (player.speed > 0)
-							if (!trymovedown(player, player.speed))
-								if ((rand() % 2) == 0) {
-									if (!trymoveleft(player, player.speed))
-										trymoveright(player, player.speed);
-								} else {
-									if (!trymoveright(player, player.speed))
-										trymoveleft(player, player.speed);
-								}
-						break;
-					default:
-						printf("Fatal error: processgameplaystep()");
-						exit(1);
-				}
+			case PLAYER_DIRECTION_MOVING_LEFT:
+				if (player.speed > 0)
+					if (!trymoveleft(player))
+						if ((rand() % 2) == 0) {
+							if (!trymoveup(player))
+								trymovedown(player);
+						} else {
+							if (!trymovedown(player))
+								trymoveup(player);
+						}
+				break;
+			case PLAYER_DIRECTION_MOVING_RIGHT:
+				if (player.speed > 0)
+					if (!trymoveright(player))
+						if ((rand() % 2) == 0) {
+							if (!trymoveup(player))
+								trymovedown(player);
+						} else {
+							if (!trymovedown(player))
+								trymoveup(player);
+						}
+				break;
+			case PLAYER_DIRECTION_MOVING_DOWN:
+				if (player.speed > 0)
+					if (!trymovedown(player))
+						if ((rand() % 2) == 0) {
+							if (!trymoveleft(player))
+								trymoveright(player);
+						} else {
+							if (!trymoveright(player))
+								trymoveleft(player);
+						}
 				break;
 			default:
-				printf("Fatal error: processGamePlayer()");
+				printf("Fatal error: processgameplaystep()");
 				exit(1);
+			}
+			// ================= DIRECTION LEFT =================
+			// When the player wants to turn to left
+		case PLAYER_DIRECTION_LEFT:
+			switch (player.directionmoving) {
+			case PLAYER_DIRECTION_MOVING_UP:
+				if (player.speed > 0)
+					// When player has speed > 0, he can move
+					if (!trymoveleft(player))
+						// If move left fails when going up, continue to go up
+						if (!trymoveup(player))
+							// If move up failed, do left
+							trymoveright(player);
+				break;
+			case PLAYER_DIRECTION_MOVING_LEFT:
+				if (player.speed > 0)
+					if (!trymovedown(player))
+						if (!trymoveleft(player))
+							trymoveup(player);
+				break;
+			case PLAYER_DIRECTION_MOVING_RIGHT:
+				if (player.speed > 0)
+					if (!trymoveup(player))
+						if (!trymoveright(player))
+							trymovedown(player);
+				break;
+
+			case PLAYER_DIRECTION_MOVING_DOWN:
+				if (player.speed > 0)
+					if (!trymoveright(player))
+						if (!trymovedown(player))
+							trymoveleft(player);
+				break;
+
+			default:
+				printf("Fatal error: processgameplaystep()");
+				exit(1);
+			}
+			break;
+			// ================= DIRECTION RIGHT =================
+			// When the player wants to turn to right
+		case PLAYER_DIRECTION_RIGHT:
+			switch (player.directionmoving) {
+			case PLAYER_DIRECTION_MOVING_UP:
+				if (player.speed > 0)
+					// When player has speed > 0, he can move
+					if (!trymoveright(player))
+						// If move right fails when going up, continue to go up
+						if (!trymoveup(player))
+							trymoveleft(player);
+				break;
+			case PLAYER_DIRECTION_MOVING_LEFT:
+				if (player.speed > 0)
+					if (!trymoveup(player))
+						if (!trymoveleft(player))
+							trymovedown(player);
+				break;
+			case PLAYER_DIRECTION_MOVING_RIGHT:
+				if (player.speed > 0)
+					if (!trymovedown(player))
+						if (!trymoveright(player))
+							trymoveup(player);
+				break;
+
+			case PLAYER_DIRECTION_MOVING_DOWN:
+				if (player.speed > 0)
+					if (!trymoveleft(player))
+						if (!trymovedown(player))
+							trymoveright(player);
+				break;
+
+			default:
+				printf("Fatal error: processgameplaystep()");
+				exit(1);
+			}
+			break;
+		default:
+			printf("Fatal error: processGamePlayer()");
+			exit(1);
 		}
+	}
+	player.speeddone += 1;
 }
 
-
-void Game::processgameplayenemy(SDL_Event &event) {
-		// Enemy = otherplayer = LEFT/RIGHT/UP/DOWN/END
-		if (event.key.keysym.sym == SDLK_LEFT && !(event.key.keysym.sym == SDLK_RIGHT))
-			enemy.left();
-		if (event.key.keysym.sym == SDLK_RIGHT && !(event.key.keysym.sym == SDLK_LEFT))
-			enemy.right();
-		if (event.key.keysym.sym == SDLK_UP)
-			enemy.up();
-		if (event.key.keysym.sym == SDLK_DOWN)
-			enemy.down();
-		if (event.key.keysym.sym == SDLK_END) {
+void Game::processgameplayplayer(SDL_Event &event) {
+		// Player = me = ASDWE
+		if (event.key.keysym.sym == SDLK_a && !(event.key.keysym.sym == SDLK_d))
+			me.left();
+		if (event.key.keysym.sym == SDLK_d && !(event.key.keysym.sym == SDLK_a))
+			me.right();
+		if (!(event.key.keysym.sym == SDLK_d) && !(event.key.keysym.sym == SDLK_a))
+			me.normal();
+		if (event.key.keysym.sym == SDLK_w)
+			me.up();
+		if (event.key.keysym.sym == SDLK_s)
+			me.down();
+		if (event.key.keysym.sym == SDLK_e) {
 			// Then add a bullet
-			enemy.shoot();
+			me.shoot();
 			// And play a corresponding sound
 			// Mix_PlayChannel(0,shot,0); TODO
 		}
+}
+
+void Game::processgameplayenemy(SDL_Event &event) {
+	// Enemy = otherplayer = LEFT/RIGHT/UP/DOWN/END
+	if (event.key.keysym.sym == SDLK_LEFT && !(event.key.keysym.sym == SDLK_RIGHT))
+		otherplayer.left();
+	if (event.key.keysym.sym == SDLK_RIGHT && !(event.key.keysym.sym == SDLK_LEFT))
+		otherplayer.right();
+	if (!(event.key.keysym.sym == SDLK_RIGHT) && !(event.key.keysym.sym == SDLK_LEFT))
+		otherplayer.normal();
+	if (event.key.keysym.sym == SDLK_UP)
+		otherplayer.up();
+	if (event.key.keysym.sym == SDLK_DOWN)
+		otherplayer.down();
+	if (event.key.keysym.sym == SDLK_END) {
+		// Then add a bullet
+		otherplayer.shoot();
+		// And play a corresponding sound
+		// Mix_PlayChannel(0,shot,0); TODO
+	}
 }
 
