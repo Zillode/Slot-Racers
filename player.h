@@ -1,12 +1,12 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "graphics.h"
+#include "game.h"
 #include "CSprite.h"
 
 class Player {
 	public:
-		Player();
+		Player(Game *thegame);
 		~Player();
 
 		// == Vars ==
@@ -29,17 +29,11 @@ class Player {
 		void down();
 		void shoot();
 		void move(uint x, uint y);
-		void setgraphics(Graphics *thegraphics, CSprite *myspritenormal, CSprite *myspriteleft, CSprite *myspriteright, CSprite *myspritebullet);
+		void moveonmap(uint x, uint y);
 
 	private:
 		Player(const Player &player);
-		void updatecurrentsprite();
-		Graphics *graphics;
-		CSprite *currentsprite;
-		CSprite *spritenormal;
-		CSprite *spriteleft;
-		CSprite *spriteright;
-		CSprite *spritebullet;
+		Game *game;
 };
 
 #endif

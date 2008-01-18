@@ -23,14 +23,16 @@ Map::~Map()
 { }
 
 void Map::setplayers() {
-	game->me.move(0,0);
-	game->otherplayer.move(30,30);
+	game->me.moveonmap(10,10);
+	game->otherplayer.moveonmap(30,30);
 }
 
 uint Map::get(uint x, uint y)
 {
-	assert(x < map.size());
-	assert(y < map[x].size());
+	if (x < map.size())
+		return MAP_WALL;
+	if (y < map[x].size())
+		return MAP_WALL;
 	return map[x][y];
 }
 

@@ -2,8 +2,10 @@
 #include "game.h"
 
 Game::Game(): state(GAME_PLAY),
-	me(),
-	otherplayer(),
+	me(this),
+	otherplayer(this),
+	networkgame(false),
+	graphics(NULL),
 	map(NULL)
 {
 	map = new Map(this, 50,50);
@@ -12,7 +14,10 @@ Game::Game(): state(GAME_PLAY),
 }
 
 Game::~Game()
-{ }
+{
+	if (map)
+		delete map;
+}
 
 void Game::start() {
 	state = GAME_PLAY;
@@ -26,7 +31,8 @@ bool Game::stop()
 
 void Game::setmap(string mapname)
 {
-	delete map;
+	if (map)
+		delete map;
 	mapid += 1;
 	printf("TODO");
 	exit(1);
@@ -93,6 +99,8 @@ void Game::check_events()
 				// Do nothing
 				// TODO: show pause ?
 				break;
+			case GAME_STOP:
+				return;
 			default:
 				printf("Fatal error: CheckEvents()");
 				exit(1);
@@ -121,8 +129,6 @@ void Game::processgameplaynetworkenemy() {
 
 void Game::setgraphics(Graphics *thegraphics) {
 	graphics = thegraphics;
-	me.setgraphics(graphics, &graphics->meNormal, &graphics->meLeft, &graphics->meRight, &graphics->myBullet);
-	otherplayer.setgraphics(graphics, &graphics->otherplayerNormal, &graphics->otherplayerLeft, &graphics->otherplayerRight, &graphics->otherplayerBullet);
 }
 
 bool Game::trymoveup(Player &player) {

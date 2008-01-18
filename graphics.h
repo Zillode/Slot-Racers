@@ -14,6 +14,9 @@ class Graphics {
 		~Graphics();
 		void draw();
 
+		// keep a reference to the game (to ask the status for drawing / information)
+		Game *game;
+
 		// PlayerSprites for me
 		CSprite meNormal;
 		CSprite meLeft;
@@ -48,8 +51,6 @@ class Graphics {
 		SDL_Surface *screen, *background;
 		// MapId so that the background is in sync with the map
 		uint mapid;
-		// keep a reference to the game (to ask the status for drawing / information)
-		Game *game;
 		// Fonts
 		SDLFont *font, *yellowfont;
 		uint mePreviousDirection;

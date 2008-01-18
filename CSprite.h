@@ -38,11 +38,11 @@ class CSprite
   void stopAnim() { mAnimating = 0; }
   void rewind() { mFrame = 0; }
 
-  void xadd(float nr) { mX+=nr; }
-  void yadd(float nr) { mY+=nr; }
-  void xset(float nr) { mX=nr; }
-  void yset(float nr) { mY=nr; }
-  void set(float xx, float yy) { mX=xx; mY=yy; }
+  void xadd(uint nr) { mX+=nr; }
+  void yadd(uint nr) { mY+=nr; }
+  void xset(uint nr) { mX=nr; }
+  void yset(uint nr) { mY=nr; }
+  void set(uint xx, uint yy) { mX=xx; mY=yy; }
 
   float getx() {return mX;}
   float gety() {return mY;}
@@ -52,7 +52,7 @@ class CSprite
 
   private:
   int mFrame;
-  float mX, mY, mOldX, mOldY;
+  uint mX, mY, mOldX, mOldY;
   float mSpeed;
   int mAnimating;
   int mDrawn;

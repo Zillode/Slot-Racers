@@ -2,5 +2,5 @@ FILES: 2
 # SYNTAX:
 # filename of the frame, milliseconds to pause afterwards,
 # the RGB of the transparent part.
-enemy-left-0.png       50    0 255 0
-enemy-left-1.png       0     0 255 0
+enemy-left-0.bmp       500    0 255 0
+enemy-left-1.bmp       0     0 255 0

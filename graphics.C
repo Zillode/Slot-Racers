@@ -36,11 +36,8 @@ Graphics::Graphics(Game *thegame):
 	// Load the images for the other player's bullet
 	otherplayerBulletSpriteBase.init("data/enemybullet");
 	// My Sprites
-	printf("OK\n");
 	meNormal.init(&playerNormalSpriteBase,screen);
-	printf("OK\n");
 	meLeft.init(&playerLeftSpriteBase,screen);
-	printf("OK\n");
 	meRight.init(&playerRightSpriteBase,screen);
 	myBullet.init(&playerBulletSpriteBase,screen);
 	// Other player's sprites
@@ -55,7 +52,6 @@ Graphics::~Graphics()
 	delete font;
 	delete yellowfont;
 	delete background;
-	delete screen;
 }
 
 void Graphics::draw()
@@ -117,7 +113,6 @@ void Graphics::softstrech() {
 	otherplayerBulletSpriteBase.softStrech(block_width, block_height);
 }
 
-
 void Graphics::drawbackground()
 {
 	if (background == NULL || game->mapid != mapid) {
@@ -167,23 +162,29 @@ void Graphics::drawplayers()
 	switch (game->me.directiongoal)
 	{	case PLAYER_DIRECTION_NORMAL:
 			if (mePreviousDirection != PLAYER_DIRECTION_NORMAL)	{
+				mePreviousDirection = PLAYER_DIRECTION_NORMAL;
 				meNormal.stopAnim();
 				meNormal.setFrame(0);
 			}
+			meNormal.set(game->me.posx, game->me.posy);
 			meNormal.draw();
 			break;
 		case PLAYER_DIRECTION_LEFT:
 			if (mePreviousDirection != PLAYER_DIRECTION_LEFT) {
+				mePreviousDirection = PLAYER_DIRECTION_LEFT;
 				meLeft.setFrame(0);
 				meLeft.startAnim();
 			}
+			meLeft.set(game->me.posx, game->me.posy);
 			meLeft.draw();
 			break;
 		case PLAYER_DIRECTION_RIGHT:
 			if(mePreviousDirection != PLAYER_DIRECTION_RIGHT) {
+				mePreviousDirection = PLAYER_DIRECTION_RIGHT;
 				meRight.setFrame(0);
 				meRight.startAnim();
 			}
+			meRight.set(game->me.posx, game->me.posy);
 			meRight.draw();
 			break;
 		default:
@@ -194,23 +195,29 @@ void Graphics::drawplayers()
 	switch (game->otherplayer.directiongoal)
 	{	case PLAYER_DIRECTION_NORMAL:
 			if (otherplayerPreviousDirection != PLAYER_DIRECTION_NORMAL)	{
+				otherplayerPreviousDirection = PLAYER_DIRECTION_NORMAL;
 				otherplayerNormal.stopAnim();
 				otherplayerNormal.setFrame(0);
 			}
+			otherplayerNormal.set(game->me.posx, game->me.posy);
 			otherplayerNormal.draw();
 			break;
 		case PLAYER_DIRECTION_LEFT:
 			if (otherplayerPreviousDirection != PLAYER_DIRECTION_LEFT) {
+				otherplayerPreviousDirection = PLAYER_DIRECTION_LEFT;
 				otherplayerLeft.setFrame(0);
 				otherplayerLeft.startAnim();
 			}
+			otherplayerLeft.set(game->me.posx, game->me.posy);
 			otherplayerLeft.draw();
 			break;
 		case PLAYER_DIRECTION_RIGHT:
 			if(otherplayerPreviousDirection != PLAYER_DIRECTION_RIGHT) {
+				otherplayerPreviousDirection = PLAYER_DIRECTION_RIGHT;
 				otherplayerRight.setFrame(0);
 				otherplayerRight.startAnim();
 			}
+			otherplayerRight.set(game->me.posx, game->me.posy);
 			otherplayerRight.draw();
 			break;
 		default:
@@ -222,9 +229,9 @@ void Graphics::drawplayers()
 void Graphics::drawscores()
 {
 	drawString(screen, font, 5,5,"Score Player1:");
-	drawString(screen, font, 80,5,"%u",game->me.score);
+	drawString(screen, font, 110,5,"%u",game->me.score);
 	drawString(screen, font, 200,5,"Score Player2:");
-	drawString(screen, font, 280,5,"%u",game->otherplayer.score);
+	drawString(screen, font, 305,5,"%u",game->otherplayer.score);
 }
 
 void Graphics::drawimg(SDL_Surface *img, int x, int y, int w, int h, int x2, int y2)

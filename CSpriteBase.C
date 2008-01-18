@@ -49,7 +49,6 @@ int CSpriteBase::init(char *dir)
 
 void CSpriteBase::softStrech(int nW, int nH) {
 	for (int i(0); i < mNumframes; ++i) {
-		printf("%i\n",i);
 		SDL_Surface *imgold = mAnim[i].image;
 		SDL_Rect src;
 		src.x = 0;
