@@ -5,6 +5,7 @@
 
 struct CSpriteFrame
 {
+  CSpriteFrame() { }
   SDL_Surface *image;
   int pause;
 };
@@ -12,6 +13,8 @@ struct CSpriteFrame
 class CSpriteBase
 {
   public:
+  CSpriteBase();
+  ~CSpriteBase();
   int init(char *dir);
 
   CSpriteFrame *mAnim;

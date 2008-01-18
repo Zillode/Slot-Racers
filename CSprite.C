@@ -12,10 +12,11 @@
 
 #include "CSprite.h"
 
-CSprite::CSprite():
+CSprite::CSprite(bool animationstop):
 	mAnimating(0),
 	mSpeed(1),
-	mFrame(0)
+	mFrame(0),
+	mStopAnim(animationstop)
 { }
 
 CSprite::~CSprite()
@@ -59,23 +60,19 @@ void CSprite::updateBG()
 
 void CSprite::draw()
 {
-  if(mAnimating == 1)
-  {
-	if(mSpriteBase->mAnim[mFrame].pause != 0) {
-	    if(mLastupdate+mSpriteBase->mAnim[mFrame].pause*mSpeed<SDL_GetTicks())
+	if(mAnimating == 1)
+	{
+		if(mLastupdate+mSpriteBase->mAnim[mFrame].pause*mSpeed<SDL_GetTicks())
 		{
-	      mFrame++;
-	      if(mFrame>mSpriteBase->mNumframes-1) mFrame=0;
-	      mLastupdate = SDL_GetTicks();
-	    }
-	} else {
-		mAnimating = 0;
+			mFrame++;
+			if(mFrame>mSpriteBase->mNumframes-1) mFrame=0;
+			mLastupdate = SDL_GetTicks();
+		}
 	}
-  }
 
-  if(mDrawn==0) mDrawn=1;
+	if(mDrawn==0) mDrawn=1;
 
-  SDL_Rect dest;
-  dest.x = (int)mX; dest.y = (int)mY;
-  SDL_BlitSurface(mSpriteBase->mAnim[mFrame].image, NULL, mScreen, &dest);
+	SDL_Rect dest;
+	dest.x = (int)mX; dest.y = (int)mY;
+	SDL_BlitSurface(mSpriteBase->mAnim[mFrame].image, NULL, mScreen, &dest);
 }

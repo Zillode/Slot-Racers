@@ -85,40 +85,38 @@ void Game::check_events()
 				state = GAME_PAUSE;
 			}
 		}
-
-		switch (state)
-		{
-			case GAME_MENU:
-				// TODO
-				break;
-			case GAME_PLAY:
-				sdlgt+=dt*10;
-				processgameplay(event);
-				break;
-			case GAME_PAUSE:
-				// Do nothing
-				// TODO: show pause ?
-				break;
-			case GAME_STOP:
-				return;
-			default:
-				printf("Fatal error: CheckEvents()");
-				exit(1);
-		}
 	}
 
-
+	switch (state)
+	{
+	case GAME_MENU:
+		// TODO
+		break;
+	case GAME_PLAY:
+		sdlgt+=dt*10;
+		processgameplay(event);
+		break;
+	case GAME_PAUSE:
+		// Do nothing
+		// TODO: show pause ?
+		break;
+	case GAME_STOP:
+		return;
+	default:
+		printf("Fatal error: CheckEvents()");
+		exit(1);
+	}
 }
 
 void Game::processgameplay(SDL_Event &event) {
-		processgameplayplayer(event);
-		if (networkgame) {
-			processgameplaynetworkenemy();
-		} else {
-			processgameplayenemy(event);
-		}
-		processgameplaystep(me);
-		processgameplaystep(otherplayer);
+	processgameplayplayer(event);
+	if (networkgame) {
+		processgameplaynetworkenemy();
+	} else {
+		processgameplayenemy(event);
+	}
+	processgameplaystep(me);
+	processgameplaystep(otherplayer);
 }
 
 void Game::processgameplaynetworkenemy() {
@@ -339,13 +337,13 @@ void Game::processgameplaystep(Player &player) {
 }
 
 void Game::processgameplayplayer(SDL_Event &event) {
+	// Has a key been pressed down?
+	if(event.type == SDL_KEYDOWN) {
 		// Player = me = ASDWE
 		if (event.key.keysym.sym == SDLK_a && !(event.key.keysym.sym == SDLK_d))
 			me.left();
 		if (event.key.keysym.sym == SDLK_d && !(event.key.keysym.sym == SDLK_a))
 			me.right();
-		if (!(event.key.keysym.sym == SDLK_d) && !(event.key.keysym.sym == SDLK_a))
-			me.normal();
 		if (event.key.keysym.sym == SDLK_w)
 			me.up();
 		if (event.key.keysym.sym == SDLK_s)
@@ -356,25 +354,31 @@ void Game::processgameplayplayer(SDL_Event &event) {
 			// And play a corresponding sound
 			// Mix_PlayChannel(0,shot,0); TODO
 		}
+		if (!(event.key.keysym.sym == SDLK_d) && !(event.key.keysym.sym == SDLK_a))
+			me.normal();
+	}
 }
 
 void Game::processgameplayenemy(SDL_Event &event) {
-	// Enemy = otherplayer = LEFT/RIGHT/UP/DOWN/END
-	if (event.key.keysym.sym == SDLK_LEFT && !(event.key.keysym.sym == SDLK_RIGHT))
-		otherplayer.left();
-	if (event.key.keysym.sym == SDLK_RIGHT && !(event.key.keysym.sym == SDLK_LEFT))
-		otherplayer.right();
-	if (!(event.key.keysym.sym == SDLK_RIGHT) && !(event.key.keysym.sym == SDLK_LEFT))
-		otherplayer.normal();
-	if (event.key.keysym.sym == SDLK_UP)
-		otherplayer.up();
-	if (event.key.keysym.sym == SDLK_DOWN)
-		otherplayer.down();
-	if (event.key.keysym.sym == SDLK_END) {
-		// Then add a bullet
-		otherplayer.shoot();
-		// And play a corresponding sound
-		// Mix_PlayChannel(0,shot,0); TODO
+	// Has a key been pressed down?
+	if(event.type == SDL_KEYDOWN) {
+		// Enemy = otherplayer = LEFT/RIGHT/UP/DOWN/END
+		if (event.key.keysym.sym == SDLK_LEFT && !(event.key.keysym.sym == SDLK_RIGHT))
+			otherplayer.left();
+		if (event.key.keysym.sym == SDLK_RIGHT && !(event.key.keysym.sym == SDLK_LEFT))
+			otherplayer.right();
+		if (event.key.keysym.sym == SDLK_UP)
+			otherplayer.up();
+		if (event.key.keysym.sym == SDLK_DOWN)
+			otherplayer.down();
+		if (event.key.keysym.sym == SDLK_END) {
+			// Then add a bullet
+			otherplayer.shoot();
+			// And play a corresponding sound
+			// Mix_PlayChannel(0,shot,0); TODO
+		}
+		if ((event.key.keysym.sym != SDLK_RIGHT) && (event.key.keysym.sym != SDLK_LEFT))
+			otherplayer.normal();
 	}
 }
 

@@ -1,6 +1,15 @@
 #include "CSpriteBase.h"
 #include <string.h>
 
+CSpriteBase::CSpriteBase()
+{ }
+
+CSpriteBase::~CSpriteBase()
+{
+	delete [] mAnim;
+}
+
+
 int CSpriteBase::init(char *dir)
 {
   char buffer[255];

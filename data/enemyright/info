@@ -3,4 +3,4 @@ FILES: 2
 # filename of the frame, milliseconds to pause afterwards,
 # the RGB of the transparent part.
 enemy-right-0.bmp       500    0 255 0
-enemy-right-1.bmp       0     0 255 0
+enemy-right-1.bmp       500    0 255 0

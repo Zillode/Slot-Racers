@@ -20,7 +20,7 @@
 class CSprite
 {
   public:
-  CSprite();
+  CSprite(bool stopanim);
   ~CSprite();
   int init(CSpriteBase *base, SDL_Surface *screen);
   void draw();
@@ -57,6 +57,7 @@ class CSprite
   int mAnimating;
   int mDrawn;
   long mLastupdate;
+  bool mStopAnim;
   CSpriteBase *mSpriteBase;
   SDL_Surface *mBackreplacement;
   SDL_Surface *mScreen;

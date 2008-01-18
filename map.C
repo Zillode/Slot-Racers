@@ -29,9 +29,9 @@ void Map::setplayers() {
 
 uint Map::get(uint x, uint y)
 {
-	if (x < map.size())
+	if ((x < 0) || (x > width))
 		return MAP_WALL;
-	if (y < map[x].size())
+	if ((y < 0) || (y > height))
 		return MAP_WALL;
 	return map[x][y];
 }

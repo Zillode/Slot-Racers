@@ -45,6 +45,14 @@ void Player::shoot() {
 }
 
 void Player::move(uint nX, uint nY) {
+	if (nX < posx)
+			directionmoving = PLAYER_DIRECTION_MOVING_LEFT;
+	if (nX > posx)
+		directionmoving = PLAYER_DIRECTION_MOVING_RIGHT;
+	if (nY < posy)
+		directionmoving = PLAYER_DIRECTION_MOVING_UP;
+	if (nY > posy)
+		directionmoving = PLAYER_DIRECTION_MOVING_DOWN;
 	posx = nX;
 	posy = nY;
 }
