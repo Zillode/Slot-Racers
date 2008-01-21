@@ -1,4 +1,4 @@
-CXXFLAGS=-Wno-deprecated -g
+CXXFLAGS=-Wall -g
 LDFLAGS=`sdl-config --cflags --libs`
 CCFILES=CSpriteBase.C CSprite.C font.C game.C graphics.C main.C map.C player.C
 HFILES=CSpriteBase.h CSprite.h font.h game.h graphics.h main.h map.h player.h

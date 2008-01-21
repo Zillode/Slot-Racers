@@ -2,17 +2,17 @@
 #include "player.h"
 
 Player::Player(Game *thegame):
-	game(thegame),
 	score(0),
-	directionmoving(PLAYER_DIRECTION_MOVING_UP),
 	directiongoal(PLAYER_DIRECTION_NORMAL),
+	directionmoving(PLAYER_DIRECTION_MOVING_UP),
 	speed(0),
 	speeddone(0),
 	hittime(0),
 	posx(0),
 	posy(0),
 	width(0),
-	height(0)
+	height(0),
+	game(thegame)
 { }
 
 Player::~Player()

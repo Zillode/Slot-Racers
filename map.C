@@ -2,17 +2,17 @@
 #include "main.h"
 
 Map::Map(Game *thegame, uint thewidth, uint theheight):
-	width(thewidth),
-	height(theheight),
+	map(thewidth, vector<uint>(theheight, MAP_CLEAR)),
 	game(thegame),
-	map(thewidth, vector<uint>(theheight, MAP_CLEAR))
+	width(thewidth),
+	height(theheight)
 { }
 
 Map::Map(Game *thegame, string &filename):
-	width(0),
-	height(0),
+	map(0),
 	game(thegame),
-	map(0)
+	width(0),
+	height(0)
 {
 	// TODO: vul vector adhv filename (.bsp)
 	printf("TODO!");
@@ -41,6 +41,7 @@ uint Map::put(uint x, uint y, uint val)
 	assert(x < map.size());
 	assert(y < map[x].size());
 	map[x][y] = val;
+	return val;
 }
 
 uint Map::getwidth()

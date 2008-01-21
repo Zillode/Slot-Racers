@@ -1,12 +1,16 @@
 #include "main.h"
 #include "game.h"
 
-Game::Game(): state(GAME_PLAY),
+Game::Game():
+	state(GAME_PLAY),
 	me(this),
 	otherplayer(this),
-	networkgame(false),
+	mapid(0),
+	map(NULL),
+	sdlgt(0),
+	td(0), td2(0), dt(0),
 	graphics(NULL),
-	map(NULL)
+	networkgame(false)
 {
 	map = new Map(this, 50,50);
 	mapid = 0;

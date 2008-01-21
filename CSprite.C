@@ -13,10 +13,17 @@
 #include "CSprite.h"
 
 CSprite::CSprite(bool animationstop):
-	mAnimating(0),
-	mSpeed(1),
 	mFrame(0),
-	mStopAnim(animationstop)
+	mX(0), mY(0),
+	mOldX(0), mOldY(0),
+	mSpeed(1),
+	mAnimating(0),
+	mDrawn(0),
+	mLastupdate(0),
+	mStopAnim(animationstop),
+	mSpriteBase(NULL),
+	mBackreplacement(NULL),
+	mScreen(NULL)
 { }
 
 CSprite::~CSprite()

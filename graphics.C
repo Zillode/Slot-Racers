@@ -2,12 +2,6 @@
 
 Graphics::Graphics(Game *thegame):
 	game(thegame),
-	screen(NULL),
-	font(NULL),
-	yellowfont(NULL),
-	mePreviousDirection(PLAYER_DIRECTION_NORMAL),
-	otherplayerPreviousDirection(PLAYER_DIRECTION_NORMAL),
-	background(NULL),
 	meNormal(false), // Doens't stop animating on last frame
 	meLeft(true),
 	meRight(true),
@@ -15,7 +9,13 @@ Graphics::Graphics(Game *thegame):
 	otherplayerNormal(false),
 	otherplayerLeft(true),
 	otherplayerRight(true),
-	otherplayerBullet(false)
+	otherplayerBullet(false),
+	screen(NULL),
+	background(NULL),
+	font(NULL),
+	yellowfont(NULL),
+	mePreviousDirection(PLAYER_DIRECTION_NORMAL),
+	otherplayerPreviousDirection(PLAYER_DIRECTION_NORMAL)
 {
 	// Now we get ourself a widthxheightx32 surface...
 	screen = SDL_SetVideoMode(VID_RESOLUTION_X,VID_RESOLUTION_Y, 16, SDL_SWSURFACE);
