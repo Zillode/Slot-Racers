@@ -27,7 +27,9 @@ CSprite::CSprite(bool animationstop):
 { }
 
 CSprite::~CSprite()
-{ }
+{
+	SDL_FreeSurface(mBackreplacement);
+}
 
 int CSprite::init(CSpriteBase *base, SDL_Surface *screen)
 {

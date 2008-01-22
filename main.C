@@ -4,7 +4,7 @@ int main(int argc, const char* argv[]) {
 	// Initalize the random number generator
 	srand(time(NULL));
 	// Initalize the SDL Video, Audio and Joystick subsystems.
-	if(SDL_Init(SDL_INIT_AUDIO|SDL_INIT_VIDEO|SDL_INIT_JOYSTICK) < 0) {
+	if(SDL_Init(SDL_INIT_VIDEO) < 0) {
 		printf("Unable to init SDL: %s\n", SDL_GetError());
 		exit(1);
 	}
@@ -27,6 +27,7 @@ int main(int argc, const char* argv[]) {
 	    SDL_Delay(1);
 	}
 
-	// Clear exit
+	// Clean exit
+	SDL_Quit();
 	return 0;
 }

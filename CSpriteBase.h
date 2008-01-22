@@ -5,7 +5,8 @@
 
 struct CSpriteFrame
 {
-  CSpriteFrame() { }
+  CSpriteFrame():image(NULL) { }
+  ~CSpriteFrame() { if (image != NULL) SDL_FreeSurface(image); }
   SDL_Surface *image;
   int pause;
 };

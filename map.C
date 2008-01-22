@@ -31,7 +31,10 @@ Map::Map(Game *thegame, const char *filename):
 			switch (c) {
 			case '0':
 			case '1':
-				map[posx][posy] = atoi(&c);
+				if (c == 0)
+					map[posx][posy] = MAP_CLEAR;
+				if (c == 1)
+					map[posx][posy] = MAP_WALL;
 				posx++;
 				if (posx == width) {
 					posx = 0;
@@ -64,9 +67,9 @@ void Map::setplayers() {
 
 uint Map::get(uint x, uint y)
 {
-	if ((x < 0) || (x > width))
+	if (x >= width)
 		return MAP_WALL;
-	if ((y < 0) || (y > height))
+	if (y >= height)
 		return MAP_WALL;
 	return map[x][y];
 }

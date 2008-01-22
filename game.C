@@ -17,7 +17,7 @@ Game::Game():
 
 Game::~Game()
 {
-	if (map)
+	if (map != NULL)
 		delete map;
 }
 

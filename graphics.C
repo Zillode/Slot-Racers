@@ -63,7 +63,6 @@ Graphics::~Graphics()
 	freeFont(yellowfont);
 	if (background != NULL)
 		SDL_FreeSurface(background);
-	SDL_FreeSurface(screen);
 }
 
 void Graphics::draw()
