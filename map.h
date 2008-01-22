@@ -12,7 +12,7 @@ class Game;
 class Map {
 	public:
 		Map(Game *game, uint width, uint height);
-		Map(Game *game, string &filename);
+		Map(Game *game, const char *filename);
 		~Map();
 		uint get(uint x,uint y);
 		uint put(uint x,uint y, uint val);

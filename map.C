@@ -1,5 +1,6 @@
 #include "map.h"
 #include "main.h"
+#include <stdio.h>
 
 Map::Map(Game *thegame, uint thewidth, uint theheight):
 	map(thewidth, vector<uint>(theheight, MAP_CLEAR)),
@@ -8,23 +9,57 @@ Map::Map(Game *thegame, uint thewidth, uint theheight):
 	height(theheight)
 { }
 
-Map::Map(Game *thegame, string &filename):
+Map::Map(Game *thegame, const char *filename):
 	map(0),
 	game(thegame),
-	width(0),
-	height(0)
+	width(19),
+	height(11)
 {
-	// TODO: vul vector adhv filename (.bsp)
-	printf("TODO!");
-	exit(1);
+	char c(0);
+	uint posx(0);
+	uint posy(0);
+	map = vector< vector<uint> >(width, vector<uint>(height, MAP_CLEAR));
+	char mapname[100];
+	strcpy(mapname, "data/maps/");
+	strncat(mapname, filename, 85);
+	FILE *fmap = fopen(mapname, "r");
+	if (fmap != NULL)
+		do {
+			if (posx == width && posy == height)
+				break;
+			c = fgetc(fmap);
+			switch (c) {
+			case '0':
+			case '1':
+				map[posx][posy] = atoi(&c);
+				posx++;
+				if (posx == width) {
+					posx = 0;
+					posy++;
+				}
+				if (posy == height) {
+					c = EOF;
+				}
+				break;
+			case ' ':
+			case '\n':
+			case EOF:
+				break;
+			default:
+				printf("Warning: BSP != 0/1\n");
+			}
+		} while (c != EOF);
+	else
+		printf("Fatal error: opening map");
+	fclose(fmap);
 }
 
 Map::~Map()
 { }
 
 void Map::setplayers() {
-	game->me.moveonmap(10,10);
-	game->otherplayer.moveonmap(30,30);
+	game->me.moveonmap(0,0,PLAYER_DIRECTION_MOVING_UP);
+	game->otherplayer.moveonmap(0,2,PLAYER_DIRECTION_MOVING_UP);
 }
 
 uint Map::get(uint x, uint y)

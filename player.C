@@ -46,7 +46,7 @@ void Player::shoot() {
 
 void Player::move(uint nX, uint nY) {
 	if (nX < posx)
-			directionmoving = PLAYER_DIRECTION_MOVING_LEFT;
+		directionmoving = PLAYER_DIRECTION_MOVING_LEFT;
 	if (nX > posx)
 		directionmoving = PLAYER_DIRECTION_MOVING_RIGHT;
 	if (nY < posy)
@@ -57,10 +57,11 @@ void Player::move(uint nX, uint nY) {
 	posy = nY;
 }
 
-void Player::moveonmap(uint nX, uint nY) {
+void Player::moveonmap(uint nX, uint nY, uint direction) {
 	uint block_width = VID_RESOLUTION_X / game->map->getwidth();
 	uint block_height = VID_RESOLUTION_Y / game->map->getheight();
 	posx = nX * block_width;
 	posy = nY * block_height;
+	directionmoving = direction;
 }
 

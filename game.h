@@ -17,7 +17,7 @@ class Game {
 		void start();
 		bool stop();
 		void check_events();
-		void setmap(string mapname);
+		void setmap(const char *mapname);
 		void setgraphics(Graphics *thegraphics);
 
 		// == Vars ==

@@ -29,7 +29,12 @@ CSpriteBase.o: CSpriteBase.C CSpriteBase.h /usr/include/SDL/SDL.h \
   /usr/include/SDL/SDL_keysym.h /usr/include/SDL/SDL_mouse.h \
   /usr/include/SDL/SDL_video.h /usr/include/SDL/SDL_joystick.h \
   /usr/include/SDL/SDL_quit.h /usr/include/SDL/SDL_loadso.h \
-  /usr/include/SDL/SDL_timer.h /usr/include/SDL/SDL_version.h
+  /usr/include/SDL/SDL_timer.h /usr/include/SDL/SDL_version.h \
+  /usr/include/SDL/SDL_rotozoom.h /usr/include/math.h \
+  /usr/include/bits/huge_val.h /usr/include/bits/huge_valf.h \
+  /usr/include/bits/huge_vall.h /usr/include/bits/inf.h \
+  /usr/include/bits/nan.h /usr/include/bits/mathdef.h \
+  /usr/include/bits/mathcalls.h /usr/include/SDL/SDL.h
 CSprite.o: CSprite.C CSprite.h /usr/include/SDL/SDL.h \
   /usr/include/SDL/SDL_main.h /usr/include/SDL/SDL_stdinc.h \
   /usr/include/SDL/SDL_config.h /usr/include/SDL/SDL_platform.h \

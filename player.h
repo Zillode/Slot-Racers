@@ -29,7 +29,7 @@ class Player {
 		void down();
 		void shoot();
 		void move(uint x, uint y);
-		void moveonmap(uint x, uint y);
+		void moveonmap(uint x, uint y, uint direction);
 
 	private:
 		Player(const Player &player);

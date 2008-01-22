@@ -24,6 +24,8 @@ Graphics::Graphics(Game *thegame):
 		printf("Unable to set %ux%u video: %s\n", VID_RESOLUTION_X, VID_RESOLUTION_Y, SDL_GetError());
 		exit(1);
 	}
+	// We first fill the entire screen with white
+	SDL_FillRect(screen,0,0xFFFFFF);
 	// Hide the cursor
 	SDL_ShowCursor(0);
 	// Load the font
@@ -59,7 +61,9 @@ Graphics::~Graphics()
 {
 	freeFont(font);
 	freeFont(yellowfont);
-	delete background;
+	if (background != NULL)
+		SDL_FreeSurface(background);
+	SDL_FreeSurface(screen);
 }
 
 void Graphics::draw()
@@ -90,8 +94,6 @@ void Graphics::drawmenu()
 
 void Graphics::drawplay()
 {
-	// We first fill the entire screen with black
-	SDL_FillRect(screen,0,0);
 	// Draw the background
 	drawbackground();
 	// Draw the players
@@ -125,11 +127,12 @@ void Graphics::drawbackground()
 {
 	if (background == NULL || game->mapid != mapid) {
 		if (background != NULL)
-			delete background;
-		background = new SDL_Surface();
+			SDL_FreeSurface(background);
+		background = SDL_DisplayFormat(screen);
+		SDL_FillRect(background,NULL,0xFFFFFF);
 		mapid = game->mapid;
 		// Strech the images to the map <-> resolution
-		//softstrech();
+		softstrech();
 		// Draw everything on the background surface
 		for(uint i(0); i < game->map->getwidth(); ++i) {
 			for (uint j(0); j < game->map->getheight(); ++j) {
@@ -207,7 +210,7 @@ void Graphics::drawplayers()
 				otherplayerNormal.stopAnim();
 				otherplayerNormal.setFrame(0);
 			}
-			otherplayerNormal.set(game->me.posx, game->me.posy);
+			otherplayerNormal.set(game->otherplayer.posx, game->otherplayer.posy);
 			otherplayerNormal.draw();
 			break;
 		case PLAYER_DIRECTION_LEFT:
@@ -216,7 +219,7 @@ void Graphics::drawplayers()
 				otherplayerLeft.setFrame(0);
 				otherplayerLeft.startAnim();
 			}
-			otherplayerLeft.set(game->me.posx, game->me.posy);
+			otherplayerLeft.set(game->otherplayer.posx, game->otherplayer.posy);
 			otherplayerLeft.draw();
 			break;
 		case PLAYER_DIRECTION_RIGHT:
@@ -225,7 +228,7 @@ void Graphics::drawplayers()
 				otherplayerRight.setFrame(0);
 				otherplayerRight.startAnim();
 			}
-			otherplayerRight.set(game->me.posx, game->me.posy);
+			otherplayerRight.set(game->otherplayer.posx, game->otherplayer.posy);
 			otherplayerRight.draw();
 			break;
 		default:

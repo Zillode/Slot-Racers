@@ -1,5 +1,6 @@
 #include "CSpriteBase.h"
 #include <string.h>
+#include <SDL/SDL_rotozoom.h>
 
 CSpriteBase::CSpriteBase()
 { }
@@ -65,13 +66,13 @@ void CSpriteBase::softStrech(int nW, int nH) {
 		src.w = mW;
 		src.h = mH;
 		SDL_Rect dest;
-		dest.x = 0;
 		dest.y = 0;
 		dest.w = nW;
 		dest.h = nH;
-		mAnim[i].image = new SDL_Surface();
-		SDL_SoftStretch(imgold,&src,mAnim[i].image,&dest);
-		delete imgold;
+		double zoomx = mW/nW;
+		double zoomy = mH/nH;
+		mAnim[i].image = rotozoomSurfaceXY(mAnim[i].image, 0, zoomx, zoomy, 0);
+		SDL_FreeSurface(imgold);
 	}
 	mW = nW;
 	mH = nH;

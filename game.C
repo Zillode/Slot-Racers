@@ -12,9 +12,7 @@ Game::Game():
 	graphics(NULL),
 	networkgame(false)
 {
-	map = new Map(this, 50,50);
-	mapid = 0;
-	map->put(20,20,MAP_WALL); // TODO
+	map = new Map(this, "map1.bsp");
 }
 
 Game::~Game()
@@ -33,13 +31,12 @@ bool Game::stop()
 	return (state == GAME_STOP);
 }
 
-void Game::setmap(string mapname)
+void Game::setmap(const char *mapname)
 {
 	if (map)
 		delete map;
-	mapid += 1;
-	printf("TODO");
-	exit(1);
+	map = new Map(this, mapname);
+	++mapid;
 }
 
 void Game::check_events()
@@ -140,6 +137,7 @@ bool Game::trymoveup(Player &player) {
 	uint mapblockheight = VID_RESOLUTION_Y / map->getheight();
 	uint newblockposx = (nposx / mapblockwidth);
 	uint newblockposy = (nposy / mapblockheight);
+	printf("UP%u,%u\n",nposx,nposy);
 	if (map->get(newblockposx, newblockposy) == MAP_CLEAR) {
 		player.move(nposx, nposy);
 		return true;
@@ -155,6 +153,7 @@ bool Game::trymovedown(Player &player) {
 	uint mapblockheight = VID_RESOLUTION_Y / map->getheight();
 	uint newblockposx = (nposx / mapblockwidth);
 	uint newblockposy = ((nposy + player.height) / mapblockheight);
+	printf("DOWN:%u,%u\n",nposx,nposy);
 	if (map->get(newblockposx, newblockposy) == MAP_CLEAR) {
 		player.move(nposx, nposy);
 		return true;
@@ -257,8 +256,9 @@ void Game::processgameplaystep(Player &player) {
 				printf("Fatal error: processgameplaystep()");
 				exit(1);
 			}
-			// ================= DIRECTION LEFT =================
-			// When the player wants to turn to left
+		break;
+		// ================= DIRECTION LEFT =================
+		// When the player wants to turn to left
 		case PLAYER_DIRECTION_LEFT:
 			switch (player.directionmoving) {
 			case PLAYER_DIRECTION_MOVING_UP:
@@ -295,8 +295,9 @@ void Game::processgameplaystep(Player &player) {
 				exit(1);
 			}
 			break;
-			// ================= DIRECTION RIGHT =================
-			// When the player wants to turn to right
+		break;
+		// ================= DIRECTION RIGHT =================
+		// When the player wants to turn to right
 		case PLAYER_DIRECTION_RIGHT:
 			switch (player.directionmoving) {
 			case PLAYER_DIRECTION_MOVING_UP:
@@ -342,11 +343,11 @@ void Game::processgameplaystep(Player &player) {
 
 void Game::processgameplayplayer(SDL_Event &event) {
 	// Has a key been pressed down?
-	if(event.type == SDL_KEYDOWN) {
+	if (event.type == SDL_KEYDOWN) {
 		// Player = me = ASDWE
-		if (event.key.keysym.sym == SDLK_a && !(event.key.keysym.sym == SDLK_d))
+		if (event.key.keysym.sym == SDLK_a && (event.key.keysym.sym != SDLK_d))
 			me.left();
-		if (event.key.keysym.sym == SDLK_d && !(event.key.keysym.sym == SDLK_a))
+		if (event.key.keysym.sym == SDLK_d && (event.key.keysym.sym != SDLK_a))
 			me.right();
 		if (event.key.keysym.sym == SDLK_w)
 			me.up();
@@ -358,14 +359,17 @@ void Game::processgameplayplayer(SDL_Event &event) {
 			// And play a corresponding sound
 			// Mix_PlayChannel(0,shot,0); TODO
 		}
-		if (!(event.key.keysym.sym == SDLK_d) && !(event.key.keysym.sym == SDLK_a))
+	} else if(event.type == SDL_KEYUP) {
+		if ((event.key.keysym.sym == SDLK_d) && (me.directiongoal == PLAYER_DIRECTION_RIGHT))
+			me.normal();
+		if ((event.key.keysym.sym == SDLK_a) && (me.directiongoal == PLAYER_DIRECTION_LEFT))
 			me.normal();
 	}
 }
 
 void Game::processgameplayenemy(SDL_Event &event) {
 	// Has a key been pressed down?
-	if(event.type == SDL_KEYDOWN) {
+	if (event.type == SDL_KEYDOWN) {
 		// Enemy = otherplayer = LEFT/RIGHT/UP/DOWN/END
 		if (event.key.keysym.sym == SDLK_LEFT && !(event.key.keysym.sym == SDLK_RIGHT))
 			otherplayer.left();
@@ -381,7 +385,10 @@ void Game::processgameplayenemy(SDL_Event &event) {
 			// And play a corresponding sound
 			// Mix_PlayChannel(0,shot,0); TODO
 		}
-		if ((event.key.keysym.sym != SDLK_RIGHT) && (event.key.keysym.sym != SDLK_LEFT))
+	} else if(event.type == SDL_KEYUP) {
+		if ((event.key.keysym.sym == SDLK_RIGHT) && (otherplayer.directiongoal == PLAYER_DIRECTION_RIGHT))
+			otherplayer.normal();
+		if ((event.key.keysym.sym == SDLK_LEFT) && (otherplayer.directiongoal == PLAYER_DIRECTION_LEFT))
 			otherplayer.normal();
 	}
 }
