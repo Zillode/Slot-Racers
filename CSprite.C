@@ -11,6 +11,8 @@
 */
 
 #include "CSprite.h"
+#include <SDL/SDL_rotozoom.h>
+#include "main.h"
 
 CSprite::CSprite(bool animationstop):
 	mFrame(0),
@@ -67,7 +69,7 @@ void CSprite::updateBG()
   SDL_BlitSurface(mScreen, &srcrect, mBackreplacement, NULL);
 }
 
-void CSprite::draw()
+void CSprite::draw(uint direction)
 {
 	if(mAnimating == 1)
 	{
@@ -83,5 +85,24 @@ void CSprite::draw()
 
 	SDL_Rect dest;
 	dest.x = (int)mX; dest.y = (int)mY;
-	SDL_BlitSurface(mSpriteBase->mAnim[mFrame].image, NULL, mScreen, &dest);
+	uint angle = 0;
+	switch (direction) {
+	case PLAYER_DIRECTION_MOVING_LEFT:
+		angle = 90;
+		break;
+	case PLAYER_DIRECTION_MOVING_RIGHT:
+		angle = 270;
+		break;
+	case PLAYER_DIRECTION_MOVING_UP:
+		angle = 0;
+		break;
+	case PLAYER_DIRECTION_MOVING_DOWN:
+		angle = 180;
+		break;
+	default:
+		printf("Fatal error:  CSprite::draw()");
+	}
+	SDL_Surface *tmpsurf = rotozoomSurface(mSpriteBase->mAnim[mFrame].image, angle, 1, 0);
+	SDL_BlitSurface(tmpsurf, NULL, mScreen, &dest);
+	SDL_FreeSurface(tmpsurf);
 }

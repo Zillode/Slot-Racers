@@ -177,7 +177,7 @@ void Graphics::drawplayers()
 				meNormal.setFrame(0);
 			}
 			meNormal.set(game->me.posx, game->me.posy);
-			meNormal.draw();
+			meNormal.draw(game->me.directionmoving);
 			break;
 		case PLAYER_DIRECTION_LEFT:
 			if (mePreviousDirection != PLAYER_DIRECTION_LEFT) {
@@ -186,7 +186,7 @@ void Graphics::drawplayers()
 				meLeft.startAnim();
 			}
 			meLeft.set(game->me.posx, game->me.posy);
-			meLeft.draw();
+			meLeft.draw(game->me.directionmoving);
 			break;
 		case PLAYER_DIRECTION_RIGHT:
 			if(mePreviousDirection != PLAYER_DIRECTION_RIGHT) {
@@ -195,7 +195,7 @@ void Graphics::drawplayers()
 				meRight.startAnim();
 			}
 			meRight.set(game->me.posx, game->me.posy);
-			meRight.draw();
+			meRight.draw(game->me.directionmoving);
 			break;
 		default:
 			printf("Fatal Error: Drawplayers()");
@@ -210,7 +210,7 @@ void Graphics::drawplayers()
 				otherplayerNormal.setFrame(0);
 			}
 			otherplayerNormal.set(game->otherplayer.posx, game->otherplayer.posy);
-			otherplayerNormal.draw();
+			otherplayerNormal.draw(game->otherplayer.directionmoving);
 			break;
 		case PLAYER_DIRECTION_LEFT:
 			if (otherplayerPreviousDirection != PLAYER_DIRECTION_LEFT) {
@@ -219,7 +219,7 @@ void Graphics::drawplayers()
 				otherplayerLeft.startAnim();
 			}
 			otherplayerLeft.set(game->otherplayer.posx, game->otherplayer.posy);
-			otherplayerLeft.draw();
+			otherplayerLeft.draw(game->otherplayer.directionmoving);
 			break;
 		case PLAYER_DIRECTION_RIGHT:
 			if(otherplayerPreviousDirection != PLAYER_DIRECTION_RIGHT) {
@@ -228,7 +228,7 @@ void Graphics::drawplayers()
 				otherplayerRight.startAnim();
 			}
 			otherplayerRight.set(game->otherplayer.posx, game->otherplayer.posy);
-			otherplayerRight.draw();
+			otherplayerRight.draw(game->otherplayer.directionmoving);
 			break;
 		default:
 			printf("Fatal Error: Drawplayers()");

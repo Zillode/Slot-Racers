@@ -23,7 +23,7 @@ class CSprite
   CSprite(bool stopanim);
   ~CSprite();
   int init(CSpriteBase *base, SDL_Surface *screen);
-  void draw();
+  void draw(uint direction);
   void clearBG();
   void updateBG();
 
