@@ -11,7 +11,7 @@ main: $(OFILES)
 include make.depend
 
 clean:
-	rm -f main $(OFILES) make.depend
+	rm -f main $(OFILES) make.depend gmon.out
 
 make.depend: $(CCFILES) $(HFILES)
 	g++ -M $(CCFILES) >$@

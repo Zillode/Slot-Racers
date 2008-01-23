@@ -137,7 +137,6 @@ bool Game::trymoveup(Player &player) {
 	uint mapblockheight = VID_RESOLUTION_Y / map->getheight();
 	uint newblockposx = (nposx / mapblockwidth);
 	uint newblockposy = (nposy / mapblockheight);
-	printf("UP%u,%u\n",nposx,nposy);
 	if (map->get(newblockposx, newblockposy) == MAP_CLEAR) {
 		player.move(nposx, nposy);
 		return true;
@@ -153,7 +152,6 @@ bool Game::trymovedown(Player &player) {
 	uint mapblockheight = VID_RESOLUTION_Y / map->getheight();
 	uint newblockposx = (nposx / mapblockwidth);
 	uint newblockposy = ((nposy + player.height) / mapblockheight);
-	printf("DOWN:%u,%u\n",nposx,nposy);
 	if (map->get(newblockposx, newblockposy) == MAP_CLEAR) {
 		player.move(nposx, nposy);
 		return true;

@@ -31,9 +31,9 @@ Map::Map(Game *thegame, const char *filename):
 			switch (c) {
 			case '0':
 			case '1':
-				if (c == 0)
+				if (c == '0')
 					map[posx][posy] = MAP_CLEAR;
-				if (c == 1)
+				if (c == '1')
 					map[posx][posy] = MAP_WALL;
 				posx++;
 				if (posx == width) {

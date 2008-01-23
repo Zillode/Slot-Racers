@@ -140,7 +140,7 @@ void Graphics::drawbackground()
 						// The Default white background
 						break;
 					case MAP_WALL:
-						drawimg(mapWallSpriteBase.mAnim[0].image, background, 0, 0, mapWallSpriteBase.mW, mapWallSpriteBase.mH, i, j);
+						drawimg(mapWallSpriteBase.mAnim[0].image, background, 0, 0, mapWallSpriteBase.mW, mapWallSpriteBase.mH, i*mapWallSpriteBase.mW, j*mapWallSpriteBase.mH);
 						break;
 					default:
 						printf("Fatal error: DrawBackground()");
@@ -254,12 +254,14 @@ void Graphics::drawimg(SDL_Surface *img, SDL_Surface *destimg, int x, int y, int
   SDL_Rect dest;
   dest.x = x;
   dest.y = y;
+  dest.w = w;
+  dest.h = h;
   SDL_Rect dest2;
   dest2.x = x2;
   dest2.y = y2;
   dest2.w = w;
   dest2.h = h;
-  SDL_BlitSurface(img, &dest2, destimg, &dest);
+  SDL_BlitSurface(img, &dest, destimg, &dest2);
 }
 
 
