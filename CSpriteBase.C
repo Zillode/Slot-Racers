@@ -63,11 +63,9 @@ int CSpriteBase::init(char *dir)
 
 void CSpriteBase::softStrech(int nW, int nH) {
 	for (int i(0); i < mNumframes; ++i) {
-		SDL_Surface *imgold = mAnim[i].image;
-		double zoomx = (double)mW/nW;
-		double zoomy = (double)mH/nH;
+		double zoomx = (double)nW/mW;
+		double zoomy = (double)nH/mH;
 		mAnim[i].image = rotozoomSurfaceXY(mAnim[i].image, 0, zoomx, zoomy, 0);
-		SDL_FreeSurface(imgold);
 	}
 	mW = nW;
 	mH = nH;

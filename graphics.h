@@ -49,6 +49,9 @@ class Graphics {
 		// == Vars ==
 		// screen - our main surface and a background
 		SDL_Surface *screen, *background;
+		// Border (Black)
+		uint border_width;
+		uint border_height;
 		// MapId so that the background is in sync with the map
 		uint mapid;
 		// Fonts

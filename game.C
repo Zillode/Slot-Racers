@@ -130,7 +130,10 @@ void Game::setgraphics(Graphics *thegraphics) {
 	graphics = thegraphics;
 }
 
-bool Game::trymoveup(Player &player) {
+bool Game::trymoveup(Player &player, bool check) {
+	// Map_pos != Pixel_pos
+	if (check && (!moveallowed(player)))
+		return false;
 	uint nposx = player.posx;
 	uint nposy = player.posy - 1;
 	uint mapblockwidth = VID_RESOLUTION_X / map->getwidth();
@@ -145,7 +148,10 @@ bool Game::trymoveup(Player &player) {
 	}
 }
 
-bool Game::trymovedown(Player &player) {
+bool Game::trymovedown(Player &player, bool check) {
+	// Map_pos != Pixel_pos
+	if (check && (!moveallowed(player)))
+		return false;
 	uint nposx = player.posx;
 	uint nposy = player.posy + 1;
 	uint mapblockwidth = VID_RESOLUTION_X / map->getwidth();
@@ -160,7 +166,10 @@ bool Game::trymovedown(Player &player) {
 	}
 }
 
-bool Game::trymoveleft(Player &player) {
+bool Game::trymoveleft(Player &player, bool check) {
+	// Map_pos != Pixel_pos
+	if (check && (!moveallowed(player)))
+		return false;
 	uint nposx = player.posx - 1;
 	uint nposy = player.posy;
 	uint mapblockwidth = VID_RESOLUTION_X / map->getwidth();
@@ -175,7 +184,10 @@ bool Game::trymoveleft(Player &player) {
 	}
 }
 
-bool Game::trymoveright(Player &player) {
+bool Game::trymoveright(Player &player, bool check) {
+	// Map_pos != Pixel_pos
+	if (check && (!moveallowed(player)))
+		return false;
 	uint nposx = player.posx + 1;
 	uint nposy = player.posy;
 	uint mapblockwidth = VID_RESOLUTION_X / map->getwidth();
@@ -188,6 +200,13 @@ bool Game::trymoveright(Player &player) {
 	} else {
 		return false;
 	}
+}
+
+bool Game::moveallowed(Player &player) {
+	uint mapblockwidth = VID_RESOLUTION_X / map->getwidth();
+	uint mapblockheight = VID_RESOLUTION_Y / map->getheight();
+	return ((player.posx % mapblockwidth == 0) &&
+			(player.posy % mapblockheight == 0));
 }
 
 void Game::processgameplaystep(Player &player) {
@@ -262,7 +281,7 @@ void Game::processgameplaystep(Player &player) {
 			case PLAYER_DIRECTION_MOVING_UP:
 				if (player.speed > 0)
 					// When player has speed > 0, he can move
-					if (!trymoveleft(player))
+					if (!trymoveleft(player, true))
 						// If move left fails when going up, continue to go up
 						if (!trymoveup(player))
 							// If move up failed, do left
@@ -270,20 +289,20 @@ void Game::processgameplaystep(Player &player) {
 				break;
 			case PLAYER_DIRECTION_MOVING_LEFT:
 				if (player.speed > 0)
-					if (!trymovedown(player))
+					if (!trymovedown(player, true))
 						if (!trymoveleft(player))
 							trymoveup(player);
 				break;
 			case PLAYER_DIRECTION_MOVING_RIGHT:
 				if (player.speed > 0)
-					if (!trymoveup(player))
+					if (!trymoveup(player, true))
 						if (!trymoveright(player))
 							trymovedown(player);
 				break;
 
 			case PLAYER_DIRECTION_MOVING_DOWN:
 				if (player.speed > 0)
-					if (!trymoveright(player))
+					if (!trymoveright(player, true))
 						if (!trymovedown(player))
 							trymoveleft(player);
 				break;
@@ -301,27 +320,27 @@ void Game::processgameplaystep(Player &player) {
 			case PLAYER_DIRECTION_MOVING_UP:
 				if (player.speed > 0)
 					// When player has speed > 0, he can move
-					if (!trymoveright(player))
+					if (!trymoveright(player, true))
 						// If move right fails when going up, continue to go up
 						if (!trymoveup(player))
 							trymoveleft(player);
 				break;
 			case PLAYER_DIRECTION_MOVING_LEFT:
 				if (player.speed > 0)
-					if (!trymoveup(player))
+					if (!trymoveup(player, true))
 						if (!trymoveleft(player))
 							trymovedown(player);
 				break;
 			case PLAYER_DIRECTION_MOVING_RIGHT:
 				if (player.speed > 0)
-					if (!trymovedown(player))
+					if (!trymovedown(player, true))
 						if (!trymoveright(player))
 							trymoveup(player);
 				break;
 
 			case PLAYER_DIRECTION_MOVING_DOWN:
 				if (player.speed > 0)
-					if (!trymoveleft(player))
+					if (!trymoveleft(player, true))
 						if (!trymovedown(player))
 							trymoveright(player);
 				break;

@@ -12,12 +12,13 @@ Graphics::Graphics(Game *thegame):
 	otherplayerBullet(false),
 	screen(NULL),
 	background(NULL),
+	border_width(0),
+	border_height(0),
 	font(NULL),
 	yellowfont(NULL),
 	mePreviousDirection(PLAYER_DIRECTION_NORMAL),
 	otherplayerPreviousDirection(PLAYER_DIRECTION_NORMAL)
 {
-	// Now we get ourself a widthxheightx32 surface...
 	screen = SDL_SetVideoMode(VID_RESOLUTION_X,VID_RESOLUTION_Y, 16, SDL_SWSURFACE);
 	if ( screen == NULL )
 	{
@@ -107,6 +108,8 @@ void Graphics::softstrech() {
 	// Strech to the resolution
 	uint block_width = VID_RESOLUTION_X / game->map->getwidth();
 	uint block_height = VID_RESOLUTION_Y / game->map->getheight();
+	border_width = VID_RESOLUTION_X - (block_width * game->map->getwidth());
+	border_height = VID_RESOLUTION_Y - (block_height * game->map->getheight());
 	game->me.width = block_width;
 	game->me.height = block_height;
 	game->otherplayer.width = block_width;

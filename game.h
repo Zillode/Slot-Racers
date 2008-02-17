@@ -40,10 +40,11 @@ class Game {
 		void processgameplayplayer(SDL_Event &event);
 		void processgameplayenemy(SDL_Event &event);
 		void processgameplaystep(Player &player);
-		bool trymoveup(Player &player);
-		bool trymovedown(Player &player);
-		bool trymoveleft(Player &player);
-		bool trymoveright(Player &player);
+		bool trymoveup(Player &player, bool check = false);
+		bool trymovedown(Player &player, bool check = false);
+		bool trymoveleft(Player &player, bool check = false);
+		bool trymoveright(Player &player, bool check = false);
+		bool moveallowed(Player &player);
 };
 
 #endif
