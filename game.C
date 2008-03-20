@@ -8,11 +8,15 @@ Game::Game():
 	mapid(0),
 	map(NULL),
 	sdlgt(0),
+	resolution_x(VID_RESOLUTION_X),
+	resolution_y(VID_RESOLUTION_X),
 	td(0), td2(0), dt(0),
 	graphics(NULL),
 	networkgame(false)
 {
 	map = new Map(this, "map1.bsp");
+	resolution_x = (VID_RESOLUTION_X / map->getwidth()) *  map->getwidth();
+	resolution_y = (VID_RESOLUTION_Y / map->getheight()) *  map->getheight();
 }
 
 Game::~Game()
@@ -132,12 +136,12 @@ void Game::setgraphics(Graphics *thegraphics) {
 
 bool Game::trymoveup(Player &player, bool check) {
 	// Map_pos != Pixel_pos
-	if (check && (!moveallowed(player)))
+	if (check && (!moveallowed(player, player.posx, player.posy - 1)))
 		return false;
 	uint nposx = player.posx;
 	uint nposy = player.posy - 1;
-	uint mapblockwidth = VID_RESOLUTION_X / map->getwidth();
-	uint mapblockheight = VID_RESOLUTION_Y / map->getheight();
+	uint mapblockwidth = resolution_x / map->getwidth();
+	uint mapblockheight = resolution_y / map->getheight();
 	uint newblockposx = (nposx / mapblockwidth);
 	uint newblockposy = (nposy / mapblockheight);
 	if (map->get(newblockposx, newblockposy) == MAP_CLEAR) {
@@ -150,13 +154,13 @@ bool Game::trymoveup(Player &player, bool check) {
 
 bool Game::trymovedown(Player &player, bool check) {
 	// Map_pos != Pixel_pos
-	if (check && (!moveallowed(player)))
+	if (check && (!moveallowed(player, player.posx + player.width, player.posy + player.height + 1)))
 		return false;
 	uint nposx = player.posx;
 	uint nposy = player.posy + 1;
-	uint mapblockwidth = VID_RESOLUTION_X / map->getwidth();
-	uint mapblockheight = VID_RESOLUTION_Y / map->getheight();
-	uint newblockposx = (nposx / mapblockwidth);
+	uint mapblockwidth = resolution_x / map->getwidth();
+	uint mapblockheight = resolution_y / map->getheight();
+	uint newblockposx = ((nposx + player.width) / mapblockwidth);
 	uint newblockposy = ((nposy + player.height) / mapblockheight);
 	if (map->get(newblockposx, newblockposy) == MAP_CLEAR) {
 		player.move(nposx, nposy);
@@ -168,14 +172,14 @@ bool Game::trymovedown(Player &player, bool check) {
 
 bool Game::trymoveleft(Player &player, bool check) {
 	// Map_pos != Pixel_pos
-	if (check && (!moveallowed(player)))
+	if (check && (!moveallowed(player, player.posx - 1, player.posy + player.height)))
 		return false;
 	uint nposx = player.posx - 1;
 	uint nposy = player.posy;
-	uint mapblockwidth = VID_RESOLUTION_X / map->getwidth();
-	uint mapblockheight = VID_RESOLUTION_Y / map->getheight();
+	uint mapblockwidth = resolution_x / map->getwidth();
+	uint mapblockheight = resolution_y / map->getheight();
 	uint newblockposx = (nposx / mapblockwidth);
-	uint newblockposy = (nposy / mapblockheight);
+	uint newblockposy = ((nposy + player.height) / mapblockheight);
 	if (map->get(newblockposx, newblockposy) == MAP_CLEAR) {
 		player.move(nposx, nposy);
 		return true;
@@ -186,12 +190,12 @@ bool Game::trymoveleft(Player &player, bool check) {
 
 bool Game::trymoveright(Player &player, bool check) {
 	// Map_pos != Pixel_pos
-	if (check && (!moveallowed(player)))
+	if (check && (!moveallowed(player, player.posx + player.width + 1, player.posy)))
 		return false;
 	uint nposx = player.posx + 1;
 	uint nposy = player.posy;
-	uint mapblockwidth = VID_RESOLUTION_X / map->getwidth();
-	uint mapblockheight = VID_RESOLUTION_Y / map->getheight();
+	uint mapblockwidth = resolution_x / map->getwidth();
+	uint mapblockheight = resolution_y / map->getheight();
 	uint newblockposx = ((nposx + player.width) / mapblockwidth);
 	uint newblockposy = (nposy / mapblockheight);
 	if (map->get(newblockposx, newblockposy) == MAP_CLEAR) {
@@ -202,11 +206,20 @@ bool Game::trymoveright(Player &player, bool check) {
 	}
 }
 
-bool Game::moveallowed(Player &player) {
-	uint mapblockwidth = VID_RESOLUTION_X / map->getwidth();
-	uint mapblockheight = VID_RESOLUTION_Y / map->getheight();
-	return ((player.posx % mapblockwidth == 0) &&
-			(player.posy % mapblockheight == 0));
+bool Game::moveallowed(Player &player, uint x, uint y) {
+	uint mapblockwidth = resolution_x / map->getwidth();
+	uint mapblockheight = resolution_y / map->getheight();
+	/*uint borderwidth = VID_RESOLUTION_X - (map->getwidth() * mapblockwidth);
+	uint borderheight = VID_RESOLUTION_Y - (map->getheight() * mapblockheight);
+	if (((x - borderwidth) % mapblockwidth == 0) &&
+			(y % mapblockheight == mapblockheight - 1))
+		printf("JA\n");
+	else
+		printf("NEE\n");
+	return (((x - borderwidth) % mapblockwidth == 0) &&
+			(y % mapblockheight == mapblockheight - 1));*/
+	printf("%i,%i\n",x,y);
+	return map->get(x / mapblockwidth, y / mapblockheight) == MAP_CLEAR;
 }
 
 void Game::processgameplaystep(Player &player) {

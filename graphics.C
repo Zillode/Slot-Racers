@@ -2,7 +2,7 @@
 
 Graphics::Graphics(Game *thegame):
 	game(thegame),
-	meNormal(false), // Doens't stop animating on last frame
+	meNormal(false), // Doesn't stop animating on last frame
 	meLeft(true),
 	meRight(true),
 	myBullet(false),

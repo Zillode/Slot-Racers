@@ -27,6 +27,8 @@ class Game {
 		uint mapid;
 		Map *map;
 		float sdlgt;  // Stores the time that has passed
+		uint resolution_x;
+		uint resolution_y;
 
 	private:
 		Game(const Game &game);
@@ -44,7 +46,7 @@ class Game {
 		bool trymovedown(Player &player, bool check = false);
 		bool trymoveleft(Player &player, bool check = false);
 		bool trymoveright(Player &player, bool check = false);
-		bool moveallowed(Player &player);
+		bool moveallowed(Player &player, uint x, uint y);
 };
 
 #endif
