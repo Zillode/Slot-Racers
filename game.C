@@ -10,13 +10,25 @@ Game::Game():
 	sdlgt(0),
 	resolution_x(VID_RESOLUTION_X),
 	resolution_y(VID_RESOLUTION_X),
+	block_width(0),
+	block_height(0),
+	bound_X_0(0),
+	bound_X_y(0),
+	bound_Y_0(0),
+	bound_Y_x(0),
 	td(0), td2(0), dt(0),
 	graphics(NULL),
 	networkgame(false)
 {
 	map = new Map(this, "map1.bsp");
-	resolution_x = (VID_RESOLUTION_X / map->getwidth()) *  map->getwidth();
-	resolution_y = (VID_RESOLUTION_Y / map->getheight()) *  map->getheight();
+	block_width = VID_RESOLUTION_X / map->getwidth();
+	uint remains = VID_RESOLUTION_X - (map->getwidth() * block_width);
+	bound_X_0 = remains / 2;
+	bound_X_y = VID_RESOLUTION_X - bound_X_0 - (map->getwidth() * block_width);
+	block_height = VID_RESOLUTION_Y / map->getheight();
+	remains = VID_RESOLUTION_Y - (map->getheight() * block_height);
+	bound_Y_0 = remains / 2;
+	bound_Y_x = VID_RESOLUTION_Y - bound_Y_0 - (map->getheight() * block_height);
 }
 
 Game::~Game()
@@ -135,125 +147,57 @@ void Game::setgraphics(Graphics *thegraphics) {
 }
 
 bool Game::trymoveup(Player &player, bool check) {
-	// Map_pos != Pixel_pos
-	uint nposx = player.posx;
-	uint nposy = player.posy - 1;
-	uint mapblockwidth = resolution_x / map->getwidth();
-	uint mapblockheight = resolution_y / map->getheight();
-	if (check) {
-		if (!moveallowed(player, player.posx + player.width, player.posy - 1)) {
-			return false;
-		} else {
-			player.move(nposx, nposy);
-			return true;
-		}
+	if (moveallowed(player, 0, -1)) {
+		player.move(player.posx, player.posy - 1);
+		return true;
 	} else {
-		uint newblockposx = (nposx / mapblockwidth);
-		uint newblockposy = (nposy / mapblockheight);
-		if (map->get(newblockposx, newblockposy) == MAP_CLEAR) {
-			player.move(nposx, nposy);
-			return true;
-		} else {
-			return false;
-		}
+		return false;
 	}
 }
 
 bool Game::trymovedown(Player &player, bool check) {
-	// Map_pos != Pixel_pos
-	uint nposx = player.posx;
-	uint nposy = player.posy + 1;
-	uint mapblockwidth = resolution_x / map->getwidth();
-	uint mapblockheight = resolution_y / map->getheight();
-	if (check) {
-		// When turning
-		if (!moveallowed(player, player.posx, player.posy + player.height + 1)) {
-			return false;
-		} else {
-			player.move(nposx, nposy);
-			return true;
-		}
+	if (moveallowed(player, 0, 1)) {
+		player.move(player.posx, player.posy + 1);
+		return true;
 	} else {
-		// When in a corner
-		uint newblockposx = ((nposx + player.width) / mapblockwidth);
-		uint newblockposy = ((nposy + player.height) / mapblockheight);
-		if (map->get(newblockposx, newblockposy) == MAP_CLEAR) {
-			player.move(nposx, nposy);
-			return true;
-		} else {
-			return false;
-		}
+		return false;
 	}
 }
 
 bool Game::trymoveleft(Player &player, bool check) {
-	// Map_pos != Pixel_pos
-	uint nposx = player.posx - 1;
-	uint nposy = player.posy;
-	uint mapblockwidth = resolution_x / map->getwidth();
-	uint mapblockheight = resolution_y / map->getheight();
-	if (check) {
-		if (!moveallowed(player, player.posx - 1, player.posy + player.height)) {
-			return false;
-		} else {
-			player.move(nposx, nposy);
-			return true;
-		}
+	if (moveallowed(player, -1, 0)) {
+		player.move(player.posx - 1, player.posy);
+		return true;
 	} else {
-		uint newblockposx = (nposx / mapblockwidth);
-		uint newblockposy = ((nposy + player.height) / mapblockheight);
-		if (map->get(newblockposx, newblockposy) == MAP_CLEAR) {
-			player.move(nposx, nposy);
-			return true;
-		} else {
-			return false;
-		}
+		return false;
 	}
 }
 
 bool Game::trymoveright(Player &player, bool check) {
-	// Map_pos != Pixel_pos
-	uint nposx = player.posx + 1;
-	uint nposy = player.posy;
-	uint mapblockwidth = resolution_x / map->getwidth();
-	uint mapblockheight = resolution_y / map->getheight();
-	if (check) {
-		if (!moveallowed(player, player.posx + player.width + 1, player.posy)) {
-			return false;
-		} else {
-			player.move(nposx, nposy);
-			return true;
-		}
+	if (moveallowed(player, 1, 0)) {
+		player.move(player.posx + 1, player.posy);
+		return true;
 	} else {
-		uint newblockposx = ((nposx + player.width) / mapblockwidth);
-		uint newblockposy = (nposy / mapblockheight);
-		if (map->get(newblockposx, newblockposy) == MAP_CLEAR) {
-			player.move(nposx, nposy);
-			return true;
-		} else {
-			return false;
-		}
+		return false;
 	}
 }
 
-bool Game::moveallowed(Player &player, uint x, uint y) {
-	uint mapblockwidth = resolution_x / map->getwidth();
-	uint mapblockheight = resolution_y / map->getheight();
-	/*uint borderwidth = VID_RESOLUTION_X - (map->getwidth() * mapblockwidth);
-	  uint borderheight = VID_RESOLUTION_Y - (map->getheight() * mapblockheight);
-	  if (((x - borderwidth) % mapblockwidth == 0) &&
-	  (y % mapblockheight == mapblockheight - 1))
-	  printf("JA\n");
-	  else
-	  printf("NEE\n");
-	  return (((x - borderwidth) % mapblockwidth == 0) &&
-	  (y % mapblockheight == mapblockheight - 1));*/
-	printf("%i,%i,%i,%i,%i,%i,%i\n",x,y,mapblockwidth, mapblockheight,x / mapblockwidth, y / mapblockheight, map->get(x / mapblockwidth, y / mapblockheight));
-	bool x_ok = (x % mapblockwidth) == 0;
-	bool y_ok = (y % mapblockheight) == 0;
-	if (!((x_ok || y_ok) && !(x_ok && y_ok)))
-		return false;
-	return (map->get(x / mapblockwidth, y / mapblockheight) == MAP_CLEAR);
+bool Game::moveallowed(Player &player, int x, int y) {
+	int newposx = player.posx + bound_X_0 + x;
+	int newposy = player.posy + bound_Y_0 + y;
+	int newblockleft = ((newposx - (player.width / 2)) / block_width);
+	int newblockright = ((newposx + (((player.width % 2) == 0) ? ((player.width / 2) - 1) : (player.width / 2))) / block_width);
+	int newblockup = ((newposy - (player.height / 2)) / block_height);
+	int newblockdown = ((newposy + (((player.height % 2) == 0) ? ((player.height / 2) - 1) : (player.height / 2))) / block_height);
+	printf("%i,%i\n", newblockleft, newblockup);
+	printf("%i,%i\n", newblockleft, newblockdown);
+	printf("%i,%i\n", newblockright, newblockdown);
+	printf("%i,%i\n", newblockright, newblockdown);
+	printf("-------\n");
+	return ((map->get(newblockleft, newblockup) == MAP_CLEAR) &&
+					(map->get(newblockleft, newblockdown) == MAP_CLEAR) &&
+					(map->get(newblockright, newblockup) == MAP_CLEAR) &&
+					(map->get(newblockright, newblockdown) == MAP_CLEAR));
 }
 
 void Game::processgameplaystep(Player &player) {

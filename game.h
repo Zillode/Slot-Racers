@@ -29,6 +29,12 @@ class Game {
 		float sdlgt;  // Stores the time that has passed
 		uint resolution_x;
 		uint resolution_y;
+		uint block_width;
+		uint block_height;
+		uint bound_X_0; // left bound
+		uint bound_X_y; // right bound
+		uint bound_Y_0; // upper bound
+		uint bound_Y_x; // lower bound
 
 	private:
 		Game(const Game &game);
@@ -46,7 +52,7 @@ class Game {
 		bool trymovedown(Player &player, bool check = false);
 		bool trymoveleft(Player &player, bool check = false);
 		bool trymoveright(Player &player, bool check = false);
-		bool moveallowed(Player &player, uint x, uint y);
+		bool moveallowed(Player &player, int x, int y);
 };
 
 #endif
