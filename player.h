@@ -18,8 +18,6 @@ class Player {
 		uint hittime;
 		uint posx;
 		uint posy;
-		uint width;
-		uint height;
 
 		// == Functions ==
 		void normal();

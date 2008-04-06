@@ -21,10 +21,12 @@ Game::Game():
 	networkgame(false)
 {
 	map = new Map(this, "map1.bsp");
+	// Width
 	block_width = VID_RESOLUTION_X / map->getwidth();
 	uint remains = VID_RESOLUTION_X - (map->getwidth() * block_width);
 	bound_X_0 = remains / 2;
 	bound_X_y = VID_RESOLUTION_X - bound_X_0 - (map->getwidth() * block_width);
+	// Height
 	block_height = VID_RESOLUTION_Y / map->getheight();
 	remains = VID_RESOLUTION_Y - (map->getheight() * block_height);
 	bound_Y_0 = remains / 2;
@@ -183,12 +185,12 @@ bool Game::trymoveright(Player &player, bool check) {
 }
 
 bool Game::moveallowed(Player &player, int x, int y) {
-	int newposx = player.posx + bound_X_0 + x;
-	int newposy = player.posy + bound_Y_0 + y;
-	int newblockleft = ((newposx - (player.width / 2)) / block_width);
-	int newblockright = ((newposx + (((player.width % 2) == 0) ? ((player.width / 2) - 1) : (player.width / 2))) / block_width);
-	int newblockup = ((newposy - (player.height / 2)) / block_height);
-	int newblockdown = ((newposy + (((player.height % 2) == 0) ? ((player.height / 2) - 1) : (player.height / 2))) / block_height);
+	int newposx = player.posx + x;
+	int newposy = player.posy + y;
+	int newblockleft = ((newposx - bound_X_0 - (block_width / 2)) / block_width);
+	int newblockright = ((newposx - bound_X_0 + (((block_width % 2) == 0) ? ((block_width / 2) - 1) : (block_width / 2))) / block_width);
+	int newblockup = ((newposy - bound_Y_0 - (block_height / 2)) / block_height);
+	int newblockdown = ((newposy - bound_Y_0 + (((block_height % 2) == 0) ? ((block_height / 2) - 1) : (block_height / 2))) / block_height);
 	printf("%i,%i\n", newblockleft, newblockup);
 	printf("%i,%i\n", newblockleft, newblockdown);
 	printf("%i,%i\n", newblockright, newblockdown);

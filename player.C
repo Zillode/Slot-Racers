@@ -10,8 +10,6 @@ Player::Player(Game *thegame):
 	hittime(0),
 	posx(0),
 	posy(0),
-	width(0),
-	height(0),
 	game(thegame)
 { }
 
@@ -58,10 +56,8 @@ void Player::move(uint nX, uint nY) {
 }
 
 void Player::moveonmap(uint nX, uint nY, uint direction) {
-	uint block_width = VID_RESOLUTION_X / game->map->getwidth();
-	uint block_height = VID_RESOLUTION_Y / game->map->getheight();
-	posx = nX * block_width;
-	posy = nY * block_height;
+	posx = game->bound_X_0 + (nX * game->block_width) + (game->block_width / 2);
+	posy = game->bound_Y_0 + (nY * game->block_height) + (game->block_height / 2);
 	directionmoving = direction;
 }
 

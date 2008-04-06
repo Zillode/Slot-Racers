@@ -61,8 +61,8 @@ Map::~Map()
 { }
 
 void Map::setplayers() {
-	game->me.moveonmap(0,0,PLAYER_DIRECTION_MOVING_UP);
-	game->otherplayer.moveonmap(0,2,PLAYER_DIRECTION_MOVING_UP);
+	game->me.moveonmap(0,0,PLAYER_DIRECTION_MOVING_RIGHT);
+	game->otherplayer.moveonmap(0,0,PLAYER_DIRECTION_MOVING_DOWN);
 }
 
 uint Map::get(uint x, uint y)

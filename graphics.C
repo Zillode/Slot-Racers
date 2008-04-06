@@ -106,14 +106,8 @@ void Graphics::drawplay()
 
 void Graphics::softstrech() {
 	// Strech to the resolution
-	uint block_width = VID_RESOLUTION_X / game->map->getwidth();
-	uint block_height = VID_RESOLUTION_Y / game->map->getheight();
-	border_width = VID_RESOLUTION_X - (block_width * game->map->getwidth());
-	border_height = VID_RESOLUTION_Y - (block_height * game->map->getheight());
-	game->me.width = block_width;
-	game->me.height = block_height;
-	game->otherplayer.width = block_width;
-	game->otherplayer.height = block_height;
+	uint block_width = game->block_width;
+	uint block_height = game->block_height;
 	mapWallSpriteBase.softStrech(block_width, block_height);
 	playerNormalSpriteBase.softStrech(block_width, block_height);
 	playerLeftSpriteBase.softStrech(block_width, block_height);
@@ -152,7 +146,7 @@ void Graphics::drawbackground()
 			}
 		}
 	}
-	drawimg(background, 0, 0, VID_RESOLUTION_X, VID_RESOLUTION_Y, 0, 0);
+	drawimg(background, 0, 0, VID_RESOLUTION_X, VID_RESOLUTION_Y, game->bound_X_0, game->bound_Y_0);
 }
 
 void Graphics::drawplayers()
@@ -172,6 +166,8 @@ void Graphics::drawplayers()
 		otherplayerNormal.setFrame(0);
 	}
 
+	uint block_half_width = game->block_width / 2;
+	uint block_half_height = game->block_height / 2;
 	switch (game->me.directiongoal)
 	{	case PLAYER_DIRECTION_NORMAL:
 			if (mePreviousDirection != PLAYER_DIRECTION_NORMAL)	{
@@ -179,7 +175,7 @@ void Graphics::drawplayers()
 				meNormal.stopAnim();
 				meNormal.setFrame(0);
 			}
-			meNormal.set(game->me.posx, game->me.posy);
+			meNormal.set(game->me.posx - block_half_width, game->me.posy - block_half_height);
 			meNormal.draw(game->me.directionmoving);
 			break;
 		case PLAYER_DIRECTION_LEFT:
@@ -188,7 +184,7 @@ void Graphics::drawplayers()
 				meLeft.setFrame(0);
 				meLeft.startAnim();
 			}
-			meLeft.set(game->me.posx, game->me.posy);
+			meLeft.set(game->me.posx - block_half_width, game->me.posy - block_half_height);
 			meLeft.draw(game->me.directionmoving);
 			break;
 		case PLAYER_DIRECTION_RIGHT:
@@ -197,7 +193,7 @@ void Graphics::drawplayers()
 				meRight.setFrame(0);
 				meRight.startAnim();
 			}
-			meRight.set(game->me.posx, game->me.posy);
+			meRight.set(game->me.posx - block_half_width, game->me.posy - block_half_height);
 			meRight.draw(game->me.directionmoving);
 			break;
 		default:
