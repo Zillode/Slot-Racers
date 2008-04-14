@@ -1,0 +1,10 @@
+Dependencies:
+	libsdl1.2-dev and libsdl-gfx1.2-dev
+
+Player 1:
+	- Black
+	- Use ASDW to move and E to shoot
+
+Player 2:
+	- Red
+	- Use Arrows to move and END to shoot
