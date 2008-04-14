@@ -208,7 +208,7 @@ void Graphics::drawplayers()
 				otherplayerNormal.stopAnim();
 				otherplayerNormal.setFrame(0);
 			}
-			otherplayerNormal.set(game->otherplayer.posx, game->otherplayer.posy);
+			otherplayerNormal.set(game->otherplayer.posx - block_half_width, game->otherplayer.posy - block_half_height);
 			otherplayerNormal.draw(game->otherplayer.directionmoving);
 			break;
 		case PLAYER_DIRECTION_LEFT:
@@ -217,7 +217,7 @@ void Graphics::drawplayers()
 				otherplayerLeft.setFrame(0);
 				otherplayerLeft.startAnim();
 			}
-			otherplayerLeft.set(game->otherplayer.posx, game->otherplayer.posy);
+			otherplayerLeft.set(game->otherplayer.posx - block_half_width, game->otherplayer.posy - block_half_height);
 			otherplayerLeft.draw(game->otherplayer.directionmoving);
 			break;
 		case PLAYER_DIRECTION_RIGHT:
@@ -226,7 +226,7 @@ void Graphics::drawplayers()
 				otherplayerRight.setFrame(0);
 				otherplayerRight.startAnim();
 			}
-			otherplayerRight.set(game->otherplayer.posx, game->otherplayer.posy);
+			otherplayerRight.set(game->otherplayer.posx - block_half_width, game->otherplayer.posy - block_half_height);
 			otherplayerRight.draw(game->otherplayer.directionmoving);
 			break;
 		default:
