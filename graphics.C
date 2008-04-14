@@ -30,7 +30,7 @@ Graphics::Graphics(Game *thegame):
 	// Hide the cursor
 	SDL_ShowCursor(0);
 	// Load the font
-	font = initFont("data/font");
+	font = initFont("data/font", 255, 255, 255);
 	yellowfont = initFont("data/font",1,1,0);
 	// Load the wall image
 	mapWallSpriteBase.init("data/wall");

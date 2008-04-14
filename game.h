@@ -39,7 +39,8 @@ class Game {
 	private:
 		Game(const Game &game);
 		int td,td2;  // Used when checking the time difference
-		float dt;     // The time that has elapsed since the previous frame
+		float dt;    // The time that has elapsed since the previous frame
+		unsigned long prevtime;
 		Graphics *graphics;
 		bool networkgame;
 

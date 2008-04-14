@@ -1,5 +1,6 @@
 #include "main.h"
 #include "game.h"
+#include <algorithm>
 
 Game::Game():
 	state(GAME_PLAY),
@@ -17,6 +18,7 @@ Game::Game():
 	bound_Y_0(0),
 	bound_Y_x(0),
 	td(0), td2(0), dt(0),
+	prevtime(0),
 	graphics(NULL),
 	networkgame(false)
 {
@@ -59,31 +61,21 @@ void Game::setmap(const char *mapname)
 
 void Game::check_events()
 {
-	// With the following block of code we check how much time has passed
-    // between two frames. We store that time in millisecodns in 'dt', divided
-    // by 10. If we move some thing dt units in some direction every frame,
-    // then after 1 second, the thing has moved 100 pixels.
-    // If we move it 2.5*dt units, after 1 second it has moved 250 pixels, etc
-    // In order to have frame-rate independent movement, everything must
-    // move x*dt pixels.
-    td2=SDL_GetTicks();
-    dt=((float)(td2-td))*0.1;
-    td=td2;
+	unsigned long speed = 50;
+	unsigned long time = std::min(SDL_GetTicks() - prevtime, speed);
+	SDL_Delay(speed - time);
+	prevtime = SDL_GetTicks();
 
-    // We will not use the function SDL_GetTicks() in any other part of the game,
-    // but we'll use a simple variable sdlgt instead. We do that because with it
-    // the rest of the game won't know whether the game has been paused or not
-    // and everything will be updated accordingly
-    // If the game isn't paused then we increase the value of sdlgt.
-    // Basically sdlgt tells of how many milliseconds the game has been played
-    // (w/o being paused)
-    if (state != GAME_PAUSE)
-    {
-      sdlgt+=dt*10;
-    }
+	td2=SDL_GetTicks();
+	dt=((float)(td2-td))*0.1;
+	td=td2;
+	if (state != GAME_PAUSE)
+	{
+		sdlgt+=dt*10;
+	}
 
 	// Check if we have some interesting events...
-    SDL_Event event;
+	SDL_Event event;
 	SDL_PollEvent(&event);
 	// If we must quit, then do so
 	if(event.type == SDL_QUIT) { state = GAME_STOP; }
@@ -112,7 +104,6 @@ void Game::check_events()
 		// TODO
 		break;
 	case GAME_PLAY:
-		sdlgt+=dt*10;
 		processgameplay(event);
 		break;
 	case GAME_PAUSE:
@@ -134,8 +125,12 @@ void Game::processgameplay(SDL_Event &event) {
 	} else {
 		processgameplayenemy(event);
 	}
-	processgameplaystep(me);
-	processgameplaystep(otherplayer);
+	for (uint i(0); i < 3; ++i) {
+		processgameplaystep(me);
+		processgameplaystep(otherplayer);
+		//processgameplaystep(mybullet);
+		//processgameplaystep(otherbullet);
+	}
 }
 
 void Game::processgameplaynetworkenemy() {
@@ -191,11 +186,11 @@ bool Game::moveallowed(Player &player, int x, int y) {
 	int newblockright = ((newposx - bound_X_0 + (((block_width % 2) == 0) ? ((block_width / 2) - 1) : (block_width / 2))) / block_width);
 	int newblockup = ((newposy - bound_Y_0 - (block_height / 2)) / block_height);
 	int newblockdown = ((newposy - bound_Y_0 + (((block_height % 2) == 0) ? ((block_height / 2) - 1) : (block_height / 2))) / block_height);
-	printf("%i,%i\n", newblockleft, newblockup);
+	/*printf("%i,%i\n", newblockleft, newblockup);
 	printf("%i,%i\n", newblockleft, newblockdown);
 	printf("%i,%i\n", newblockright, newblockdown);
 	printf("%i,%i\n", newblockright, newblockdown);
-	printf("-------\n");
+	printf("-------\n");*/
 	return ((map->get(newblockleft, newblockup) == MAP_CLEAR) &&
 					(map->get(newblockleft, newblockdown) == MAP_CLEAR) &&
 					(map->get(newblockright, newblockup) == MAP_CLEAR) &&
