@@ -5,7 +5,9 @@ class Graphics;
 
 #include "graphics.h"
 #include "map.h"
+#include "movingobject.h"
 #include "player.h"
+#include "bullet.h"
 #include "main.h"
 
 class Game {
@@ -48,12 +50,14 @@ class Game {
 		void processgameplaynetworkenemy();
 		void processgameplayplayer(SDL_Event &event);
 		void processgameplayenemy(SDL_Event &event);
-		void processgameplaystep(Player &player);
-		bool trymoveup(Player &player, bool check = false);
-		bool trymovedown(Player &player, bool check = false);
-		bool trymoveleft(Player &player, bool check = false);
-		bool trymoveright(Player &player, bool check = false);
-		bool moveallowed(Player &player, int x, int y);
+		void processgameplaystep(MovingObject &movingobject);
+		void checkbullets();
+		bool trymoveup(MovingObject &movingobject, bool check = false);
+		bool trymovedown(MovingObject &movingobject, bool check = false);
+		bool trymoveleft(MovingObject &movingobject, bool check = false);
+		bool trymoveright(MovingObject &movingobject, bool check = false);
+		bool moveallowed(MovingObject &movingobject, int x, int y);
+		bool collide(MovingObject &movingobject1, MovingObject &movingobject2);
 };
 
 #endif

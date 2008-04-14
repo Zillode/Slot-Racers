@@ -40,11 +40,10 @@ class Graphics {
 		void drawimg(SDL_Surface *img, int x, int y, int w, int h, int x2, int y2);
 		void drawimg(SDL_Surface *img, SDL_Surface *dest, int x, int y, int w, int h, int x2, int y2);
 		void drawplayers();
+		void drawbullets();
 		void drawbackground();
 		void drawscores();
 		void softstrech();
-		void moveplayer(uint x, uint y);
-		void moveenemy(uint x, uint y);
 
 		// == Vars ==
 		// screen - our main surface and a background

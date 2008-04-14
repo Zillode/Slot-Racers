@@ -106,3 +106,24 @@ void CSprite::draw(uint direction)
 	SDL_BlitSurface(tmpsurf, NULL, mScreen, &dest);
 	SDL_FreeSurface(tmpsurf);
 }
+
+void CSprite::draw()
+{
+	if(mAnimating == 1)
+	{
+		if(mLastupdate+mSpriteBase->mAnim[mFrame].pause*mSpeed<SDL_GetTicks())
+		{
+			mFrame++;
+			if(mFrame>mSpriteBase->mNumframes-1) mFrame=0;
+			mLastupdate = SDL_GetTicks();
+		}
+	}
+
+	if(mDrawn==0) mDrawn=1;
+
+	SDL_Rect dest;
+	dest.x = (int)mX; dest.y = (int)mY;
+	SDL_Surface *tmpsurf = mSpriteBase->mAnim[mFrame].image;
+	SDL_BlitSurface(tmpsurf, NULL, mScreen, &dest);
+}
+

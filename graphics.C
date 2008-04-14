@@ -98,6 +98,8 @@ void Graphics::drawplay()
 	drawbackground();
 	// Draw the players
 	drawplayers();
+	// Draw the bullets
+	drawbullets();
 	// Draw the scores
 	drawscores();
 	// Flip the screen
@@ -235,6 +237,27 @@ void Graphics::drawplayers()
 	}
 }
 
+void Graphics::drawbullets()
+{
+	if (game->me.bullet.shot) {
+		uint block_half_width = game->block_width / 2;
+		uint block_half_height = game->block_height / 2;
+		myBullet.stopAnim();
+		myBullet.setFrame(0);
+		myBullet.set(game->me.bullet.posx - block_half_width, game->me.bullet.posy - block_half_height);
+		myBullet.draw();
+	}
+	if (game->otherplayer.bullet.shot) {
+		uint block_half_width = game->block_width / 2;
+		uint block_half_height = game->block_height / 2;
+		otherplayerBullet.stopAnim();
+		otherplayerBullet.setFrame(0);
+		otherplayerBullet.set(game->otherplayer.bullet.posx - block_half_width, game->otherplayer.bullet.posy - block_half_height);
+		otherplayerBullet.draw();
+	}
+}
+
+
 void Graphics::drawscores()
 {
 	drawString(screen, font, 5,5,"Score Player1:");
@@ -269,6 +292,3 @@ void Graphics::drawsettings()
 	// TODO
 }
 
-void Graphics::moveplayer(uint nX, uint xY) {
-	// TODO
-}

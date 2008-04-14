@@ -24,6 +24,7 @@ class CSprite
   ~CSprite();
   int init(CSpriteBase *base, SDL_Surface *screen);
   void draw(uint direction);
+  void draw();
   void clearBG();
   void updateBG();
 

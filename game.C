@@ -128,9 +128,56 @@ void Game::processgameplay(SDL_Event &event) {
 	for (uint i(0); i < 3; ++i) {
 		processgameplaystep(me);
 		processgameplaystep(otherplayer);
-		//processgameplaystep(mybullet);
-		//processgameplaystep(otherbullet);
+		processgameplaystep(me.bullet);
+		processgameplaystep(otherplayer.bullet);
+		checkbullets();
 	}
+}
+
+void Game::checkbullets() {
+	if (me.bullet.shot && collide(me.bullet, otherplayer)) {
+		me.bullet.stop();
+		me.score += 1;
+		otherplayer.directionmoving = me.bullet.directionmoving;
+		otherplayer.speed = PLAYER_MAX_SPEED;
+		for (uint i(0); i < 70; ++i) {
+			processgameplaystep(otherplayer);
+		}
+	}
+	if (otherplayer.bullet.shot && collide(otherplayer.bullet, me)) {
+		otherplayer.bullet.stop();
+		otherplayer.score += 1;
+		me.speed = PLAYER_MAX_SPEED;
+		me.directionmoving = otherplayer.bullet.directionmoving;
+		for (uint i(0); i < 70; ++i) {
+			processgameplaystep(me);
+		}
+	}
+}
+
+bool Game::collide(MovingObject &object1, MovingObject &object2) {
+	int left1, left2;
+    int right1, right2;
+    int top1, top2;
+    int bottom1, bottom2;
+	uint block_width_offset = block_width * 0.80;
+	uint block_height_offset = block_height * 0.80;
+    left1 = object1.posx + ((block_width - (block_width_offset)) /2);
+    left2 = object2.posx + ((block_width - (block_width_offset)) /2);
+    right1 = left1 + block_width_offset;
+    right2 = left2 + block_width_offset;
+    top1 = object1.posy + ((block_width - block_height_offset) /2);
+    top2 = object2.posy + ((block_height_offset - block_height_offset) /2);
+    bottom1 = top1 + block_height_offset;
+    bottom2 = top2 + block_height_offset;
+
+    if (bottom1 < top2) return false;
+    if (top1 > bottom2) return false;
+
+    if (right1 < left2) return false;
+    if (left1 > right2) return false;
+
+    return true;
 }
 
 void Game::processgameplaynetworkenemy() {
@@ -143,45 +190,45 @@ void Game::setgraphics(Graphics *thegraphics) {
 	graphics = thegraphics;
 }
 
-bool Game::trymoveup(Player &player, bool check) {
-	if (moveallowed(player, 0, -1)) {
-		player.move(player.posx, player.posy - 1);
+bool Game::trymoveup(MovingObject &movingobject, bool check) {
+	if (moveallowed(movingobject, 0, -1)) {
+		movingobject.move(movingobject.posx, movingobject.posy - 1);
 		return true;
 	} else {
 		return false;
 	}
 }
 
-bool Game::trymovedown(Player &player, bool check) {
-	if (moveallowed(player, 0, 1)) {
-		player.move(player.posx, player.posy + 1);
+bool Game::trymovedown(MovingObject &movingobject, bool check) {
+	if (moveallowed(movingobject, 0, 1)) {
+		movingobject.move(movingobject.posx, movingobject.posy + 1);
 		return true;
 	} else {
 		return false;
 	}
 }
 
-bool Game::trymoveleft(Player &player, bool check) {
-	if (moveallowed(player, -1, 0)) {
-		player.move(player.posx - 1, player.posy);
+bool Game::trymoveleft(MovingObject &movingobject, bool check) {
+	if (moveallowed(movingobject, -1, 0)) {
+		movingobject.move(movingobject.posx - 1, movingobject.posy);
 		return true;
 	} else {
 		return false;
 	}
 }
 
-bool Game::trymoveright(Player &player, bool check) {
-	if (moveallowed(player, 1, 0)) {
-		player.move(player.posx + 1, player.posy);
+bool Game::trymoveright(MovingObject &movingobject, bool check) {
+	if (moveallowed(movingobject, 1, 0)) {
+		movingobject.move(movingobject.posx + 1, movingobject.posy);
 		return true;
 	} else {
 		return false;
 	}
 }
 
-bool Game::moveallowed(Player &player, int x, int y) {
-	int newposx = player.posx + x;
-	int newposy = player.posy + y;
+bool Game::moveallowed(MovingObject &movingobject, int x, int y) {
+	int newposx = movingobject.posx + x;
+	int newposy = movingobject.posy + y;
 	int newblockleft = ((newposx - bound_X_0 - (block_width / 2)) / block_width);
 	int newblockright = ((newposx - bound_X_0 + (((block_width % 2) == 0) ? ((block_width / 2) - 1) : (block_width / 2))) / block_width);
 	int newblockup = ((newposy - bound_Y_0 - (block_height / 2)) / block_height);
@@ -197,64 +244,64 @@ bool Game::moveallowed(Player &player, int x, int y) {
 					(map->get(newblockright, newblockdown) == MAP_CLEAR));
 }
 
-void Game::processgameplaystep(Player &player) {
-	if (player.speeddone > OBJECT_MAX_SPEED)
-		player.speeddone = 0;
+void Game::processgameplaystep(MovingObject &movingobject) {
+	if (movingobject.speeddone > OBJECT_MAX_SPEED)
+		movingobject.speeddone = 0;
 	// If his speed is high enough to move at this point, make a move!
-	if (player.speed > player.speeddone) {
-		switch (player.directiongoal) {
+	if (movingobject.speed > movingobject.speeddone) {
+		switch (movingobject.directiongoal) {
 			// ================= DIRECTION NORMAL =================
-			// When the player doesn't wants to turn
+			// When the movingobject doesn't wants to turn
 		case PLAYER_DIRECTION_NORMAL:
 			// If it's possible, just go in the same direction
-			switch (player.directionmoving) {
+			switch (movingobject.directionmoving) {
 			case PLAYER_DIRECTION_MOVING_UP:
 				// Try to move up
-				if (player.speed > 0)
-					// When player has speed > 0, he can move
-					if (!trymoveup(player))
+				if (movingobject.speed > 0)
+					// When movingobject has speed > 0, he can move
+					if (!trymoveup(movingobject))
 						// If move up failed, do random right/left
 						if ((rand() % 2) == 0) {
-							if (!trymoveright(player))
+							if (!trymoveright(movingobject))
 								// If move right also failed, try left
-								trymoveleft(player);
+								trymoveleft(movingobject);
 						} else {
-							if (!trymoveleft(player))
+							if (!trymoveleft(movingobject))
 								// If move right also failed, try left
-								trymoveright(player);
+								trymoveright(movingobject);
 						}
 				break;
 			case PLAYER_DIRECTION_MOVING_LEFT:
-				if (player.speed > 0)
-					if (!trymoveleft(player))
+				if (movingobject.speed > 0)
+					if (!trymoveleft(movingobject))
 						if ((rand() % 2) == 0) {
-							if (!trymoveup(player))
-								trymovedown(player);
+							if (!trymoveup(movingobject))
+								trymovedown(movingobject);
 						} else {
-							if (!trymovedown(player))
-								trymoveup(player);
+							if (!trymovedown(movingobject))
+								trymoveup(movingobject);
 						}
 				break;
 			case PLAYER_DIRECTION_MOVING_RIGHT:
-				if (player.speed > 0)
-					if (!trymoveright(player))
+				if (movingobject.speed > 0)
+					if (!trymoveright(movingobject))
 						if ((rand() % 2) == 0) {
-							if (!trymoveup(player))
-								trymovedown(player);
+							if (!trymoveup(movingobject))
+								trymovedown(movingobject);
 						} else {
-							if (!trymovedown(player))
-								trymoveup(player);
+							if (!trymovedown(movingobject))
+								trymoveup(movingobject);
 						}
 				break;
 			case PLAYER_DIRECTION_MOVING_DOWN:
-				if (player.speed > 0)
-					if (!trymovedown(player))
+				if (movingobject.speed > 0)
+					if (!trymovedown(movingobject))
 						if ((rand() % 2) == 0) {
-							if (!trymoveleft(player))
-								trymoveright(player);
+							if (!trymoveleft(movingobject))
+								trymoveright(movingobject);
 						} else {
-							if (!trymoveright(player))
-								trymoveleft(player);
+							if (!trymoveright(movingobject))
+								trymoveleft(movingobject);
 						}
 				break;
 			default:
@@ -263,36 +310,36 @@ void Game::processgameplaystep(Player &player) {
 			}
 			break;
 			// ================= DIRECTION LEFT =================
-			// When the player wants to turn to left
+			// When the movingobject wants to turn to left
 		case PLAYER_DIRECTION_LEFT:
-			switch (player.directionmoving) {
+			switch (movingobject.directionmoving) {
 			case PLAYER_DIRECTION_MOVING_UP:
-				if (player.speed > 0)
-					// When player has speed > 0, he can move
-					if (!trymoveleft(player, true))
+				if (movingobject.speed > 0)
+					// When movingobject has speed > 0, he can move
+					if (!trymoveleft(movingobject, true))
 						// If move left fails when going up, continue to go up
-						if (!trymoveup(player))
+						if (!trymoveup(movingobject))
 							// If move up failed, do left
-							trymoveright(player);
+							trymoveright(movingobject);
 				break;
 			case PLAYER_DIRECTION_MOVING_LEFT:
-				if (player.speed > 0)
-					if (!trymovedown(player, true))
-						if (!trymoveleft(player))
-							trymoveup(player);
+				if (movingobject.speed > 0)
+					if (!trymovedown(movingobject, true))
+						if (!trymoveleft(movingobject))
+							trymoveup(movingobject);
 				break;
 			case PLAYER_DIRECTION_MOVING_RIGHT:
-				if (player.speed > 0)
-					if (!trymoveup(player, true))
-						if (!trymoveright(player))
-							trymovedown(player);
+				if (movingobject.speed > 0)
+					if (!trymoveup(movingobject, true))
+						if (!trymoveright(movingobject))
+							trymovedown(movingobject);
 				break;
 
 			case PLAYER_DIRECTION_MOVING_DOWN:
-				if (player.speed > 0)
-					if (!trymoveright(player, true))
-						if (!trymovedown(player))
-							trymoveleft(player);
+				if (movingobject.speed > 0)
+					if (!trymoveright(movingobject, true))
+						if (!trymovedown(movingobject))
+							trymoveleft(movingobject);
 				break;
 
 			default:
@@ -300,37 +347,36 @@ void Game::processgameplaystep(Player &player) {
 				exit(1);
 			}
 			break;
-			break;
 			// ================= DIRECTION RIGHT =================
-			// When the player wants to turn to right
+			// When the movingobject wants to turn to right
 		case PLAYER_DIRECTION_RIGHT:
-			switch (player.directionmoving) {
+			switch (movingobject.directionmoving) {
 			case PLAYER_DIRECTION_MOVING_UP:
-				if (player.speed > 0)
-					// When player has speed > 0, he can move
-					if (!trymoveright(player, true))
+				if (movingobject.speed > 0)
+					// When movingobject has speed > 0, he can move
+					if (!trymoveright(movingobject, true))
 						// If move right fails when going up, continue to go up
-						if (!trymoveup(player))
-							trymoveleft(player);
+						if (!trymoveup(movingobject))
+							trymoveleft(movingobject);
 				break;
 			case PLAYER_DIRECTION_MOVING_LEFT:
-				if (player.speed > 0)
-					if (!trymoveup(player, true))
-						if (!trymoveleft(player))
-							trymovedown(player);
+				if (movingobject.speed > 0)
+					if (!trymoveup(movingobject, true))
+						if (!trymoveleft(movingobject))
+							trymovedown(movingobject);
 				break;
 			case PLAYER_DIRECTION_MOVING_RIGHT:
-				if (player.speed > 0)
-					if (!trymovedown(player, true))
-						if (!trymoveright(player))
-							trymoveup(player);
+				if (movingobject.speed > 0)
+					if (!trymovedown(movingobject, true))
+						if (!trymoveright(movingobject))
+							trymoveup(movingobject);
 				break;
 
 			case PLAYER_DIRECTION_MOVING_DOWN:
-				if (player.speed > 0)
-					if (!trymoveleft(player, true))
-						if (!trymovedown(player))
-							trymoveright(player);
+				if (movingobject.speed > 0)
+					if (!trymoveleft(movingobject, true))
+						if (!trymovedown(movingobject))
+							trymoveright(movingobject);
 				break;
 
 			default:
@@ -339,17 +385,17 @@ void Game::processgameplaystep(Player &player) {
 			}
 			break;
 		default:
-			printf("Fatal error: processGamePlayer()");
+			printf("Fatal error: processGameMovingObject()");
 			exit(1);
 		}
 	}
-	player.speeddone += 1;
+	movingobject.speeddone += 1;
 }
 
 void Game::processgameplayplayer(SDL_Event &event) {
 	// Has a key been pressed down?
 	if (event.type == SDL_KEYDOWN) {
-		// Player = me = ASDWE
+		// MovingObject = me = ASDWE
 		if (event.key.keysym.sym == SDLK_a && (event.key.keysym.sym != SDLK_d))
 			me.left();
 		if (event.key.keysym.sym == SDLK_d && (event.key.keysym.sym != SDLK_a))
