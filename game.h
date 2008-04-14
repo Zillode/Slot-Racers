@@ -37,13 +37,13 @@ class Game {
 		uint bound_X_y; // right bound
 		uint bound_Y_0; // upper bound
 		uint bound_Y_x; // lower bound
+		Graphics *graphics;
 
 	private:
 		Game(const Game &game);
 		int td,td2;  // Used when checking the time difference
 		float dt;    // The time that has elapsed since the previous frame
 		unsigned long prevtime;
-		Graphics *graphics;
 		bool networkgame;
 
 		void processgameplay(SDL_Event &event);

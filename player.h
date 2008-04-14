@@ -14,12 +14,14 @@ class Player : public MovingObject {
 		// == Vars ==
 		uint score;
 		uint hittime;
+		bool hittable;
 		Bullet bullet;
 
 		// == Functions ==
 		void up();
 		void down();
 		void shoot();
+		void hit(Bullet &bullet);
 
 	private:
 		Player(const Player &player);

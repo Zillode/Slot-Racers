@@ -153,21 +153,6 @@ void Graphics::drawbackground()
 
 void Graphics::drawplayers()
 {
-	// If 3 seconds have passed since the player got hit then
-	if(game->sdlgt - game->me.hittime>3000)	{
-		// Stop the ships blinking animation
-		meNormal.stopAnim();
-		// Show the frame of animation with the ship on it
-		meNormal.setFrame(0);
-	}
-	// If 3 seconds have passed since the other player got hit then
-	if(game->sdlgt - game->otherplayer.hittime>3000) {
-		// Stop the ships blinking animation
-		otherplayerNormal.stopAnim();
-		// Show the frame of animation with the ship on it
-		otherplayerNormal.setFrame(0);
-	}
-
 	uint block_half_width = game->block_width / 2;
 	uint block_half_height = game->block_height / 2;
 	switch (game->me.directiongoal)

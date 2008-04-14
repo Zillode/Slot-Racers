@@ -24,15 +24,18 @@
 #define GAME_PAUSE		5
 
 // Video Resolution
-#define VID_RESOLUTION_X 320
-#define VID_RESOLUTION_Y 240
+#define VID_RESOLUTION_X 800
+#define VID_RESOLUTION_Y 600
+
+// Game Settings
+#define GAME_SPEED		2.5
 
 // Player States
-#define OBJECT_MAX_SPEED		4
-#define PLAYER_MAX_SPEED		3
-#define PLAYER_DIRECTION_NORMAL	0
-#define PLAYER_DIRECTION_LEFT	1
-#define PLAYER_DIRECTION_RIGHT	2
+#define OBJECT_MAX_SPEED_DEFAULT 8
+#define PLAYER_MAX_SPEED		 3
+#define PLAYER_DIRECTION_NORMAL	 0
+#define PLAYER_DIRECTION_LEFT	 1
+#define PLAYER_DIRECTION_RIGHT	 2
 
 // Player Moving States
 #define PLAYER_DIRECTION_MOVING_UP		0

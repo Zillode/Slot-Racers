@@ -17,9 +17,9 @@ Game::Game():
 	bound_X_y(0),
 	bound_Y_0(0),
 	bound_Y_x(0),
+	graphics(NULL),
 	td(0), td2(0), dt(0),
 	prevtime(0),
-	graphics(NULL),
 	networkgame(false)
 {
 	map = new Map(this, "map1.bsp");
@@ -73,6 +73,32 @@ void Game::check_events()
 	{
 		sdlgt+=dt*10;
 	}
+    // If 3 seconds have passed since the player got hit then
+    if(!me.hittable && sdlgt - me.hittime>3000) {
+        // Stop the player blinking animation
+        graphics->meNormal.stopAnim();
+        graphics->meNormal.setFrame(0);
+        graphics->meLeft.stopAnim();
+        graphics->meLeft.setFrame(0);
+        graphics->meRight.stopAnim();
+        graphics->meRight.setFrame(0);
+		me.hittable = true;
+		if (me.hittime != 0)
+			me.speed = PLAYER_MAX_SPEED;
+    }
+	// Same for the otherplayer
+    if(!otherplayer.hittable && sdlgt - otherplayer.hittime>3000) {
+        graphics->otherplayerNormal.stopAnim();
+        graphics->otherplayerNormal.setFrame(0);
+        graphics->otherplayerLeft.stopAnim();
+        graphics->otherplayerLeft.setFrame(0);
+        graphics->otherplayerRight.stopAnim();
+        graphics->otherplayerRight.setFrame(0);
+		otherplayer.hittable = true;
+		if (otherplayer.hittime != 0)
+			otherplayer.speed = PLAYER_MAX_SPEED;
+    }
+
 
 	// Check if we have some interesting events...
 	SDL_Event event;
@@ -125,7 +151,7 @@ void Game::processgameplay(SDL_Event &event) {
 	} else {
 		processgameplayenemy(event);
 	}
-	for (uint i(0); i < 3; ++i) {
+	for (uint i(0); i < 3*GAME_SPEED; ++i) {
 		processgameplaystep(me);
 		processgameplaystep(otherplayer);
 		processgameplaystep(me.bullet);
@@ -135,23 +161,21 @@ void Game::processgameplay(SDL_Event &event) {
 }
 
 void Game::checkbullets() {
-	if (me.bullet.shot && collide(me.bullet, otherplayer)) {
+	if (me.bullet.shot && otherplayer.hittable && collide(me.bullet, otherplayer)) {
 		me.bullet.stop();
 		me.score += 1;
-		otherplayer.directionmoving = me.bullet.directionmoving;
-		otherplayer.speed = PLAYER_MAX_SPEED;
-		for (uint i(0); i < 70; ++i) {
-			processgameplaystep(otherplayer);
-		}
+		otherplayer.hit(me.bullet);
+		graphics->otherplayerNormal.startAnim();
+		graphics->otherplayerLeft.startAnim();
+		graphics->otherplayerRight.startAnim();
 	}
-	if (otherplayer.bullet.shot && collide(otherplayer.bullet, me)) {
+	if (otherplayer.bullet.shot && me.hittable && collide(otherplayer.bullet, me)) {
 		otherplayer.bullet.stop();
 		otherplayer.score += 1;
-		me.speed = PLAYER_MAX_SPEED;
-		me.directionmoving = otherplayer.bullet.directionmoving;
-		for (uint i(0); i < 70; ++i) {
-			processgameplaystep(me);
-		}
+		me.hit(otherplayer.bullet);
+		graphics->meNormal.startAnim();
+		graphics->meLeft.startAnim();
+		graphics->meRight.startAnim();
 	}
 }
 
@@ -160,14 +184,14 @@ bool Game::collide(MovingObject &object1, MovingObject &object2) {
     int right1, right2;
     int top1, top2;
     int bottom1, bottom2;
-	uint block_width_offset = block_width * 0.80;
-	uint block_height_offset = block_height * 0.80;
-    left1 = object1.posx + ((block_width - (block_width_offset)) /2);
-    left2 = object2.posx + ((block_width - (block_width_offset)) /2);
+	uint block_width_offset = block_width;
+	uint block_height_offset = block_height;
+    left1 = object1.posx + (block_width /2);
+    left2 = object2.posx + (block_width /2);
     right1 = left1 + block_width_offset;
     right2 = left2 + block_width_offset;
-    top1 = object1.posy + ((block_width - block_height_offset) /2);
-    top2 = object2.posy + ((block_height_offset - block_height_offset) /2);
+    top1 = object1.posy + (block_width /2);
+    top2 = object2.posy + (block_height /2);
     bottom1 = top1 + block_height_offset;
     bottom2 = top2 + block_height_offset;
 
@@ -233,11 +257,6 @@ bool Game::moveallowed(MovingObject &movingobject, int x, int y) {
 	int newblockright = ((newposx - bound_X_0 + (((block_width % 2) == 0) ? ((block_width / 2) - 1) : (block_width / 2))) / block_width);
 	int newblockup = ((newposy - bound_Y_0 - (block_height / 2)) / block_height);
 	int newblockdown = ((newposy - bound_Y_0 + (((block_height % 2) == 0) ? ((block_height / 2) - 1) : (block_height / 2))) / block_height);
-	/*printf("%i,%i\n", newblockleft, newblockup);
-	printf("%i,%i\n", newblockleft, newblockdown);
-	printf("%i,%i\n", newblockright, newblockdown);
-	printf("%i,%i\n", newblockright, newblockdown);
-	printf("-------\n");*/
 	return ((map->get(newblockleft, newblockup) == MAP_CLEAR) &&
 					(map->get(newblockleft, newblockdown) == MAP_CLEAR) &&
 					(map->get(newblockright, newblockup) == MAP_CLEAR) &&
@@ -245,7 +264,7 @@ bool Game::moveallowed(MovingObject &movingobject, int x, int y) {
 }
 
 void Game::processgameplaystep(MovingObject &movingobject) {
-	if (movingobject.speeddone > OBJECT_MAX_SPEED)
+	if (movingobject.speeddone >= OBJECT_MAX_SPEED_DEFAULT)
 		movingobject.speeddone = 0;
 	// If his speed is high enough to move at this point, make a move!
 	if (movingobject.speed > movingobject.speeddone) {
