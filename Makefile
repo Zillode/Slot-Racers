@@ -1,4 +1,4 @@
-CXXFLAGS=-Wall -g -pg
+CXXFLAGS=-Wall -O2
 LDFLAGS=`sdl-config --cflags --libs` -lSDL_gfx
 CCFILES=CSpriteBase.C CSprite.C font.C game.C graphics.C main.C map.C player.C bullet.C movingobject.C
 HFILES=CSpriteBase.h CSprite.h font.h game.h graphics.h main.h map.h player.h bullet.h movingobject.h

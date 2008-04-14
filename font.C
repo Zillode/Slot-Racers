@@ -13,7 +13,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
-#include <string.h>
 
 #include <SDL/SDL.h>
 
@@ -37,7 +36,7 @@ void fontDrawIMG(SDL_Surface *screen, SDL_Surface *img, int x, int y, int w,
 }
 
 // this function loads in our font file
-SDLFont *initFont(char *fontdir, float r, float g, float b, float a)
+SDLFont *initFont(std::string stdfontdir, float r, float g, float b, float a)
 {
   // some variables
   SDLFont *tempFont;               // a temporary font
@@ -46,6 +45,7 @@ SDLFont *initFont(char *fontdir, float r, float g, float b, float a)
   unsigned char tmp;               // temporary unsigned char
   int width;                       // the width of the font
   SDL_Surface *tempSurface;        // temporary surface
+  const char * fontdir = stdfontdir.c_str();
 
   // find out about the size of a font from the ini file
   sprintf(tempString,"%s/%s",fontdir,"font.ini");
@@ -119,7 +119,7 @@ SDLFont *initFont(char *fontdir, float r, float g, float b, float a)
 }
 
 // here we draw the string
-void drawString(SDL_Surface *screen, SDLFont *font, int x, int y, char *str, ...)
+void drawString(SDL_Surface *screen, SDLFont *font, int x, int y, const char *str,...)
 {
   char string[1024];                  // Temporary string
 

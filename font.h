@@ -11,6 +11,7 @@
 */
 
 #include <SDL/SDL.h>    // just in case...
+#include <string>
 
 // Structure to hold our font
 struct SDLFont
@@ -25,17 +26,17 @@ struct SDLFont
 // Function prototypes
 
 // This function initalizes a font
-SDLFont *initFont(char *fontdir, float r, float g, float b, float a);
+SDLFont *initFont(std::string fontdir, float r, float g, float b, float a);
 
 // Some overloaded functions to make your life easier
-inline SDLFont *initFont(char *fontdir, float r, float g, float b) { return initFont(fontdir, r,g,b,1); }
-inline SDLFont *initFont(char *fontdir) { return initFont(fontdir, 1,1,1,1); }
+inline SDLFont *initFont(std::string fontdir, float r, float g, float b) { return initFont(fontdir, r,g,b,1); }
+inline SDLFont *initFont(std::string fontdir) { return initFont(fontdir, 1,1,1,1); }
 
 // This function draws a string
-void drawString(SDL_Surface *screen, SDLFont *font, int x, int y, char *str,...);
+void drawString(SDL_Surface *screen, SDLFont *font, int x, int y, const char *str,...);
 
 // This function returns the width of a string
-int stringWidth(SDLFont *font, char *str,...);
+int stringWidth(SDLFont *font, std::string str,...);
 
 // This function destroys the font
 void freeFont(SDLFont *font);

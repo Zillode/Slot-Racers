@@ -15,8 +15,9 @@ CSpriteBase::~CSpriteBase()
 }
 
 
-int CSpriteBase::init(char *dir)
+int CSpriteBase::init(std::string stddir)
 {
+	const char *dir = stddir.c_str();
 	char buffer[255];
 	char filename[255];
 	char name[255];

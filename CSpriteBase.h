@@ -2,6 +2,7 @@
 #define __CSPRITEBASE_H__
 
 #include <SDL/SDL.h>
+#include <string>
 
 struct CSpriteFrame
 {
@@ -16,7 +17,7 @@ class CSpriteBase
   public:
   CSpriteBase();
   ~CSpriteBase();
-  int init(char *dir);
+  int init(std::string dir);
 
   CSpriteFrame *mAnim;
   int mBuilt, mNumframes, mW, mH;
