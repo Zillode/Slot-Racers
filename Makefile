@@ -4,6 +4,7 @@ CCFILES=CSpriteBase.C CSprite.C font.C game.C graphics.C main.C map.C player.C b
 HFILES=CSpriteBase.h CSprite.h font.h game.h graphics.h main.h map.h player.h bullet.h movingobject.h
 EXTRAFILES=data/* README COPYING
 OFILES=$(CCFILES:%.C=%.o)
+ALLFILES=$(CCFILES) $(HFILES) $(EXTRAFILES) Makefile
 
 main: $(OFILES)
 	g++ $(CXXFLAGS) $(LDFLAGS) -o slotracers $^
@@ -17,4 +18,9 @@ make.depend: $(CCFILES) $(HFILES)
 	g++ -M $(CCFILES) >$@
 
 tar:
-	rm atari-game.tar ; tar cvf atari-game.tar $(CCFILES) $(HFILES) $(EXTRAFILES) Makefile
+	rm -f atari-game.tar
+	rm -f atari-game.tar.gz
+	rm -f atari-game.rar
+	tar cvf atari-game.tar $(ALLFILES)
+	tar cvzf atari-game.tar.gz $(ALLFILES)
+	rar a atari-game.rar $(ALLFILES)

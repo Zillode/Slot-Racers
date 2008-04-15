@@ -69,10 +69,7 @@ void Game::check_events()
 	td2=SDL_GetTicks();
 	dt=((float)(td2-td))*0.1;
 	td=td2;
-	if (state != GAME_PAUSE)
-	{
-		sdlgt+=dt*10;
-	}
+	sdlgt+=dt*10;
     // If 3 seconds have passed since the player got hit then
     if(!me.hittable && sdlgt - me.hittime>3000) {
         // Stop the player blinking animation
@@ -117,6 +114,7 @@ void Game::check_events()
 		if(event.key.keysym.sym == SDLK_p)
 		{
 			if (state == GAME_PAUSE) {
+				prevtime = SDL_GetTicks();
 				state = GAME_PLAY;
 			} else {
 				state = GAME_PAUSE;
