@@ -132,12 +132,14 @@ void Game::check_events()
 	case GAME_PLAY:
 		processgameplay(event);
 		break;
+	case GAME_SETTINGS:
+		break;
+	case GAME_STOP:
+		return;
 	case GAME_PAUSE:
 		// Do nothing
 		// TODO: show pause ?
 		break;
-	case GAME_STOP:
-		return;
 	default:
 		printf("Fatal error: CheckEvents()");
 		exit(1);

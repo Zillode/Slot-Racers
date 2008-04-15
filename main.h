@@ -28,7 +28,7 @@
 #define VID_RESOLUTION_Y 600
 
 // Game Settings
-#define GAME_SPEED		2.5
+#define GAME_SPEED		3.5
 
 // Player States
 #define OBJECT_MAX_SPEED_DEFAULT 8

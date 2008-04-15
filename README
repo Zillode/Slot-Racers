@@ -67,6 +67,8 @@ To run the binary:
     - Red
     - Use Arrows to move and END to shoot
 
+ - Pause: P
+
  Just edit the source when you want to change this (it's in game.C at the end)
 
 

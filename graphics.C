@@ -81,6 +81,8 @@ void Graphics::draw()
 		case GAME_STOP:
 			// Do nothing
 			break;
+		case GAME_PAUSE:
+			break;
 		default:
 			printf("Fatal Error");
 			exit(1);
