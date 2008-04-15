@@ -1,10 +1,105 @@
-Dependencies:
-	libsdl1.2-dev and libsdl-gfx1.2-dev
 
-Player 1:
-	- Black
-	- Use ASDW to move and E to shoot
+                ********************************
+                *                              *
+                *         Slot Racers          *
+                *                              *
+                *         Version 1.0          *
+                *                              *
+                *      Made by Lode Hoste      *
+                *                              *
+                ********************************
 
-Player 2:
-	- Red
-	- Use Arrows to move and END to shoot
+
+This package containts:
+	- Source code for Slot Racers for PC (Based on the Atari game)
+	- Binary of the game
+
+                             -----
+
+The program is free software and is copyrighted under the GNU General Public License. It comes with absolutely no warranty. See the file COPYING for details.
+
+Written by Lode Hoste
+Email: zillode@zillode.be
+
+Thanks to Atari for the cool idea ;-)
+
+For news and updates have a look at my homepage:
+	http://www.zillode.be
+
+
+
+Table of contents
+=%=%=%=%=%=%=%=%=
+
+  1.   Dependencies and Installing
+
+  2.   Key bindings
+
+  3.   Bug reports
+
+  4.   Credits
+
+  5.   License
+
+
+
+1. Dependencies and Installing
+=%=%=%=%=%=%=%=%=%=%=%=%=%=%=%
+
+To build: (Type 'make')
+ - >=libsdl1.2-dev
+ - >=libsdl-gfx1.2-dev
+
+To run the binary:
+ - >=libsdl1.2debian
+ - >=libsdl-gfx1.2-4
+
+
+
+2. Key bindings
+=%=%=%=%=%=%=%=
+
+ - Player 1:
+    - Black
+    - Use ASDW to move and E to shoot
+
+ - Player 2:
+    - Red
+    - Use Arrows to move and END to shoot
+
+ Just edit the source when you want to change this (it's in game.C at the end)
+
+
+
+3. Bug reports
+=%=%=%=%=%=%=%
+
+Please send bug reports to:
+
+zillode@zillode.be
+
+If you make any changes to the source, please mail me the 'diff -u' of the file(s) changed, and also why were the changes needed.
+
+
+
+6. License
+=%=%=%=%=%
+
+Slot Racers for Linux
+Copyright (C) 2008 Hoste Lode
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+Contact: Hoste Lode; http://www.zillode.be; zillode@zillode.be
+
