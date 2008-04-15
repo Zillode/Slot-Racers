@@ -17,4 +17,4 @@ make.depend: $(CCFILES) $(HFILES)
 	g++ -M $(CCFILES) >$@
 
 tar:
-	rm atari-game.tar && tar cvf atari-game.tar $(CCFILES) $(HFILES) $(EXTRAFILES) Makefile
+	rm atari-game.tar ; tar cvf atari-game.tar $(CCFILES) $(HFILES) $(EXTRAFILES) Makefile
