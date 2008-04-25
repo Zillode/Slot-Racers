@@ -9,10 +9,8 @@ ALLFILES=$(CCFILES) $(HFILES) $(EXTRAFILES) Makefile
 main: $(OFILES)
 	g++ $(CXXFLAGS) $(LDFLAGS) -o slotracers $^
 
-include make.depend
-
 clean:
-	rm -f main $(OFILES) make.depend gmon.out
+	rm -f main $(OFILES)
 
 make.depend: $(CCFILES) $(HFILES)
 	g++ -M $(CCFILES) >$@
