@@ -19,6 +19,6 @@ tar:
 	rm -f atari-game.tar
 	rm -f atari-game.tar.gz
 	rm -f atari-game.rar
-	tar cvf atari-game.tar $(ALLFILES)
-	tar cvzf atari-game.tar.gz $(ALLFILES)
-	rar a atari-game.rar $(ALLFILES)
+	tar cvf atari-game.tar $(addprefix ../Atari-game/, $(ALLFILES))
+	tar cvzf atari-game.tar.gz $(addprefix ../Atari-game/, $(ALLFILES))
+	rar a atari-game.rar $(addprefix ../Atari-game/, $(ALLFILES))
